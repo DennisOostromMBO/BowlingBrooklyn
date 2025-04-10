@@ -21,7 +21,36 @@
                         <label class="cursor-pointer">
                             <input type="radio" name="product" value="{{ $product }}" {{ old('product', $order->product) == $product ? 'checked' : '' }} class="hidden">
                             <div class="border-2 border-gray-700 rounded-lg p-2 hover:border-blue-500 {{ old('product', $order->product) == $product ? 'border-blue-500' : '' }}">
-                                <img src="/images/products/{{ strtolower(str_replace(' ', '_', $product)) }}.jpg" alt="{{ $product }}" class="w-full h-32 object-cover rounded">
+                                @if($product === 'Pizza')
+                                    <img src="{{ asset('img/pizza.jpg') }}" alt="Special Pizza" class="w-full h-32 object-cover rounded mt-2">
+                                @endif
+                                @if($product === 'Nachos')
+                                    <img src="{{ asset('img/nachos.jpg') }}" alt="Nachos" class="w-full h-32 object-cover rounded mt-2">
+                                @endif
+                                @if($product === 'Drinks Package')
+                                    <img src="{{ asset('img/drink_Package.jpg') }}" alt="Drinks Package" class="w-full h-32 object-cover rounded mt-2">
+                                @endif
+                                @if($product === 'Burger')
+                                    <img src="{{ asset('img/burger.jpg') }}" alt="Burger" class="w-full h-32 object-cover rounded mt-2">
+                                @endif
+                                @if($product === 'VIP Package')
+                                    <img src="{{ asset('img/vip.jpg') }}" alt="VIP Package" class="w-full h-32 object-cover rounded mt-2">
+                                @endif
+                                @if($product === 'Wings')
+                                    <img src="{{ asset('img/wings.jpg') }}" alt="Wings" class="w-full h-32 object-cover rounded mt-2">
+                                @endif
+                                @if($product === 'Fries')
+                                    <img src="{{ asset('img/fries.jpg') }}" alt="Fries" class="w-full h-32 object-cover rounded mt-2">
+                                @endif
+                                @if($product === 'Snack Platter')
+                                    <img src="{{ asset('img/snack_platter.jpg') }}" alt="Snack Platter" class="w-full h-32 object-cover rounded mt-2">
+                                @endif
+                                @if($product === 'Premium Drinks')
+                                    <img src="{{ asset('img/prime.jpg') }}" alt="Premium Drinks" class="w-full h-32 object-cover rounded mt-2">
+                                @endif
+                                @if($product === 'Kids Menu')
+                                    <img src="{{ asset('img/kids.jpg') }}" alt="Kids Menu" class="w-full h-32 object-cover rounded mt-2">
+                                @endif
                                 <p class="text-center mt-2">{{ $product }}</p>
                             </div>
                         </label>
