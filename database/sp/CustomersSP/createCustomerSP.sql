@@ -2,6 +2,7 @@ CREATE PROCEDURE createCustomer(
     IN p_first_name VARCHAR(255),
     IN p_infix VARCHAR(255),
     IN p_last_name VARCHAR(255),
+    IN p_date_of_birth DATE,
     IN p_street_name VARCHAR(255),
     IN p_house_number VARCHAR(10),
     IN p_addition VARCHAR(10),
@@ -27,6 +28,7 @@ BEGIN
         first_name, 
         infix, 
         last_name,
+        date_of_birth,
         is_active,
         created_at,
         updated_at
@@ -34,6 +36,7 @@ BEGIN
         p_first_name, 
         p_infix, 
         p_last_name,
+        p_date_of_birth,
         true,
         NOW(),
         NOW()
@@ -81,17 +84,23 @@ BEGIN
         NOW()
     );
 
-    -- Insert user
+    -- Insert user with minimal required fields
     INSERT INTO users (
         person_id,
         phone,
         email,
+        name,
+        roll_id,
+        password,
         created_at,
         updated_at
     ) VALUES (
         new_person_id,
         p_phone,
         p_email,
+        CONCAT(p_first_name, ' ', IFNULL(CONCAT(p_infix, ' '), ''), p_last_name),
+        2,
+        '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', -- default hashed password: 'password'
         NOW(),
         NOW()
     );
@@ -104,6 +113,7 @@ BEGIN
         p.first_name,
         p.infix,
         p.last_name,
+        p.date_of_birth,
         c.street_name,
         c.house_number,
         c.addition,

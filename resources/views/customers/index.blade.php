@@ -19,7 +19,7 @@
 
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-4xl font-bold text-center">Customers</h1>
-            <a href="#" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <a href="/customers/create" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 ➕ Add New Customer
             </a>
         </div>

@@ -17,7 +17,8 @@ BEGIN
     INNER JOIN customers cu ON p.id = cu.persons_id
     INNER JOIN contacts c ON cu.id = c.customer_id
     INNER JOIN users u ON p.id = u.person_id
-    WHERE cu.is_active = true;
+    WHERE cu.is_active = true
+    ORDER BY cu.id DESC;
 END;
 
 

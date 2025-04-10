@@ -13,6 +13,42 @@ class CustomerController extends Controller
         return view('customers.index', ['customers' => $customers]);
     }
 
+    public function create()
+    {
+        return view('customers.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'date_of_birth' => 'required|date',
+            'street_name' => 'required',
+            'house_number' => 'required',
+            'postal_code' => 'required',
+            'city' => 'required',
+            'phone' => 'required',
+            'email' => 'required|email'
+        ]);
+
+        DB::select('CALL createCustomer(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+            $validatedData['first_name'],
+            $request->infix,
+            $validatedData['last_name'],
+            $validatedData['date_of_birth'],
+            $validatedData['street_name'],
+            $validatedData['house_number'],
+            $request->addition,
+            $validatedData['postal_code'],
+            $validatedData['city'],
+            $validatedData['phone'],
+            $validatedData['email']
+        ]);
+
+        return redirect('/customers')->with('success', 'New customer created successfully');
+    }
+
     public function edit($id)
     {
         $customer = DB::select('CALL getCustomerById(?)', [$id])[0];
