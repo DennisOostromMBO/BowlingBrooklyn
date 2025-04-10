@@ -6,6 +6,9 @@
     <title>Customers</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+    @if ($tableEmpty)
+        <meta http-equiv="refresh" content="4; url={{ url('/') }}">
+    @endif
 </head>
 <body class="bg-gray-900 text-gray-200">
     <x-navbar />
@@ -23,58 +26,66 @@
                 ➕ Add New Customer
             </a>
         </div>
-        <table class="w-full border-collapse bg-gray-800 text-gray-200">
-            <thead>
-                <tr>
-                    <th class="border border-gray-700 px-4 py-2">Name</th>
-                    <th class="border border-gray-700 px-4 py-2">Age Category</th>
-                    <th class="border border-gray-700 px-4 py-2">Address</th>
-                    <th class="border border-gray-700 px-4 py-2">Customer Number</th>
-                    <th class="border border-gray-700 px-4 py-2">Phone</th>
-                    <th class="border border-gray-700 px-4 py-2">Email</th>
-                    <th class="border border-gray-700 px-4 py-2">Edit</th>
-                    <th class="border border-gray-700 px-4 py-2">Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($customers as $customer)
-                    <tr class="hover:bg-gray-700">
-                        <td class="border border-gray-700 px-4 py-2">
-                            {{ $customer->first_name }} {{ $customer->infix }} {{ $customer->last_name }}
-                        </td>
-                        <td class="border border-gray-700 px-4 py-2">
-                            {{ $customer->age_category }}
-                        </td>
-                        <td class="border border-gray-700 px-4 py-2">
-                            {{ $customer->street_name }} {{ $customer->house_number }}{{ $customer->addition }}<br>
-                            {{ $customer->postal_code }} {{ $customer->city }}
-                        </td>
-                        <td class="border border-gray-700 px-4 py-2">{{ $customer->customer_number }}</td>
-                        <td class="border border-gray-700 px-4 py-2">{{ $customer->phone }}</td>
-                        <td class="border border-gray-700 px-4 py-2">{{ $customer->email }}</td>
-                        <td class="border border-gray-700 px-4 py-2 text-center">
-                            <a href="/customers/{{ $customer->id }}/edit" class="text-blue-500 hover:text-blue-700 text-xl">✏️</a>
-                        </td>
-                        <td class="border border-gray-700 px-4 py-2 text-center">
-                            <form method="POST" action="/customers/{{ $customer->id }}" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" 
-                                    @if(!$customer->has_reservations) 
-                                        disabled 
-                                        class="bg-gray-500 text-gray-300 cursor-not-allowed text-xl px-3 py-1 rounded opacity-50"
-                                        title="Cannot delete customer without reservations"
-                                    @else
-                                        onclick="return confirm('Are you sure you want to delete this customer?')"
-                                        class="bg-transparent text-red-500 hover:text-red-700 text-xl"
-                                    @endif
-                                >❌</button>
-                            </form>
-                        </td>
+
+        @if ($tableEmpty)
+            <h3 class="text-red-500 text-center">Momenteel geen klantgegevens beschikbaar.</h3>
+            <h3 class="text-red-500 text-center">Je wordt binnen 4 seconden teruggestuurd naar de homepage.</h3>
+        @elseif ($customers->isEmpty())
+            <h3 class="text-red-500 text-center">Geen klant met deze achternaam gevonden.</h3>
+        @else
+            <table class="w-full border-collapse bg-gray-800 text-gray-200">
+                <thead>
+                    <tr>
+                        <th class="border border-gray-700 px-4 py-2">Name</th>
+                        <th class="border border-gray-700 px-4 py-2">Age Category</th>
+                        <th class="border border-gray-700 px-4 py-2">Address</th>
+                        <th class="border border-gray-700 px-4 py-2">Customer Number</th>
+                        <th class="border border-gray-700 px-4 py-2">Phone</th>
+                        <th class="border border-gray-700 px-4 py-2">Email</th>
+                        <th class="border border-gray-700 px-4 py-2">Edit</th>
+                        <th class="border border-gray-700 px-4 py-2">Delete</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach($customers as $customer)
+                        <tr class="hover:bg-gray-700">
+                            <td class="border border-gray-700 px-4 py-2">
+                                {{ $customer->first_name }} {{ $customer->infix }} {{ $customer->last_name }}
+                            </td>
+                            <td class="border border-gray-700 px-4 py-2">
+                                {{ $customer->age_category }}
+                            </td>
+                            <td class="border border-gray-700 px-4 py-2">
+                                {{ $customer->street_name }} {{ $customer->house_number }}{{ $customer->addition }}<br>
+                                {{ $customer->postal_code }} {{ $customer->city }}
+                            </td>
+                            <td class="border border-gray-700 px-4 py-2">{{ $customer->customer_number }}</td>
+                            <td class="border border-gray-700 px-4 py-2">{{ $customer->phone }}</td>
+                            <td class="border border-gray-700 px-4 py-2">{{ $customer->email }}</td>
+                            <td class="border border-gray-700 px-4 py-2 text-center">
+                                <a href="/customers/{{ $customer->id }}/edit" class="text-blue-500 hover:text-blue-700 text-xl">✏️</a>
+                            </td>
+                            <td class="border border-gray-700 px-4 py-2 text-center">
+                                <form method="POST" action="/customers/{{ $customer->id }}" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" 
+                                        @if(!$customer->has_reservations) 
+                                            disabled 
+                                            class="bg-gray-500 text-gray-300 cursor-not-allowed text-xl px-3 py-1 rounded opacity-50"
+                                            title="Cannot delete customer without reservations"
+                                        @else
+                                            onclick="return confirm('Are you sure you want to delete this customer?')"
+                                            class="bg-transparent text-red-500 hover:text-red-700 text-xl"
+                                        @endif
+                                    >❌</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
 
         <div class="mt-4">
             {{ $customers->links() }}

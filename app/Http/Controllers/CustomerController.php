@@ -10,6 +10,8 @@ class CustomerController extends Controller
     public function index()
     {
         $customers = DB::select('CALL getAllCustomers()');
+        $tableEmpty = empty($customers);
+
         $page = request()->get('page', 1);
         $perPage = 5;
         
@@ -23,7 +25,10 @@ class CustomerController extends Controller
             ['path' => request()->url()]
         );
         
-        return view('customers.index', ['customers' => $customers]);
+        return view('customers.index', [
+            'customers' => $customers,
+            'tableEmpty' => $tableEmpty
+        ]);
     }
 
     public function create()
