@@ -32,8 +32,15 @@
                     <td class="border border-gray-700 px-4 py-2">{{ $reservation->isactive ? 'Yes' : 'No' }}</td>
                     <td class="border border-gray-700 px-4 py-2">{{ $reservation->note }}</td>
                     <td class="border border-gray-700 px-4 py-2">
-                        <button class="edit">Edit</button>
-                        <button class="delete">Delete</button>
+                        <!-- Edit Button -->
+                        <button class="edit" onclick="window.location='{{ route('reservations.edit', $reservation->id) }}'">Edit</button>
+                        
+                        <!-- Delete Button -->
+                        <form action="{{ route('reservations.destroy', $reservation->id) }}" method="POST" class="inline-block">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="delete" onclick="return confirm('Are you sure you want to delete this reservation?')">Delete</button>
+                        </form>
                     </td>
                 </tr>
                 @endforeach

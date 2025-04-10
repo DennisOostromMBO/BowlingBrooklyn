@@ -10,9 +10,20 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Drop and create spGetAllReservations
         DB::unprepared('DROP PROCEDURE IF EXISTS spGetAllReservations');
-        $sql = file_get_contents(database_path('sp/ReservationsSP/spGetAllReservation.sql'));
-        DB::unprepared($sql);
+        $sqlGetAll = file_get_contents(database_path('sp/ReservationsSP/spGetAllReservation.sql'));
+        DB::unprepared($sqlGetAll);
+
+        // Drop and create spUpdateReservation
+        DB::unprepared('DROP PROCEDURE IF EXISTS spUpdateReservation');
+        $sqlUpdate = file_get_contents(database_path('sp/ReservationsSP/spUpdateReservation.sql'));
+        DB::unprepared($sqlUpdate);
+
+        // Drop and create spDeleteReservation
+        DB::unprepared('DROP PROCEDURE IF EXISTS spDeleteReservation');
+        $sqlDelete = file_get_contents(database_path('sp/ReservationsSP/spDeleteReservation.sql'));
+        DB::unprepared($sqlDelete);
     }
 
     /**
@@ -21,5 +32,7 @@ return new class extends Migration
     public function down(): void
     {
         DB::unprepared('DROP PROCEDURE IF EXISTS spGetAllReservations');
+        DB::unprepared('DROP PROCEDURE IF EXISTS spUpdateReservation');
+        DB::unprepared('DROP PROCEDURE IF EXISTS spDeleteReservation');
     }
 };
