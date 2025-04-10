@@ -15,15 +15,18 @@
             @csrf
             @method('PUT')
             <div class="mb-4">
-                <label for="product" class="block text-sm font-medium">Product</label>
-                <input type="text" name="product" id="product" value="{{ $order->product }}" class="w-full px-4 py-2 rounded bg-gray-800 text-gray-200">
-            </div>
-            <div class="mb-4">
-                <label for="status" class="block text-sm font-medium">Status</label>
-                <select name="status" id="status" class="w-full px-4 py-2 rounded bg-gray-800 text-gray-200">
-                    <option value="send" {{ $order->status === 'send' ? 'selected' : '' }}>Send</option>
-                    <option value="making" {{ $order->status === 'making' ? 'selected' : '' }}>Making</option>
-                </select>
+                <label for="product" class="block text-sm font-medium mb-2">Product</label>
+                <div class="grid grid-cols-2 gap-4">
+                    @foreach(['Pizza', 'Nachos', 'Drinks Package', 'Burger', 'VIP Package', 'Wings', 'Fries', 'Snack Platter', 'Premium Drinks', 'Kids Menu'] as $product)
+                        <label class="cursor-pointer">
+                            <input type="radio" name="product" value="{{ $product }}" {{ old('product', $order->product) == $product ? 'checked' : '' }} class="hidden">
+                            <div class="border-2 border-gray-700 rounded-lg p-2 hover:border-blue-500 {{ old('product', $order->product) == $product ? 'border-blue-500' : '' }}">
+                                <img src="/images/products/{{ strtolower(str_replace(' ', '_', $product)) }}.jpg" alt="{{ $product }}" class="w-full h-32 object-cover rounded">
+                                <p class="text-center mt-2">{{ $product }}</p>
+                            </div>
+                        </label>
+                    @endforeach
+                </div>
             </div>
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save Changes</button>
         </form>

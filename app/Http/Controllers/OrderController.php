@@ -38,19 +38,15 @@ class OrderController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'customerid' => 'required|integer',
-            'totalamount' => 'required|numeric',
+            'product' => 'required|string|max:255',
             'status' => 'required|string|max:50',
-            'ispaid' => 'required|boolean',
-            'note' => 'nullable|string|max:255',
-            'datecreated' => 'required|date',
-            'datemodified' => 'required|date',
         ]);
 
         $order = Order::findOrFail($id);
         $order->update($validated);
-        
-        return redirect()->route('orders.index')->with('success', 'Order is updated');
+
+        // Redirect to the index page with a success message
+        return redirect()->route('orders.index')->with('success', 'Order updated successfully.');
     }
 
     public function destroy($id)

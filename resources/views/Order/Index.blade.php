@@ -8,11 +8,7 @@
 </head>
 <body class="bg-gray-900 text-gray-200">
     <x-navbar />
-    @if(session('success'))
-    <div class="bg-green-500 text-white px-4 py-2 rounded mb-4">
-        {{ session('success') }}
-    </div>
-@endif
+
     <div class="container mx-auto py-20">
         @if (session('success'))
             <div class="bg-green-500 text-white text-center py-2 mb-4 rounded">

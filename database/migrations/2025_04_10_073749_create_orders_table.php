@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('bowling_alleyid');
-            $table->string('product');
+            $table->string('product'); // Changed from enum to string for flexibility
             $table->enum('status', ['send', 'making']);
             $table->decimal('price', 8, 2);
             $table->decimal('total_price', 10, 2);
