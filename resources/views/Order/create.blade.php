@@ -12,21 +12,29 @@
     <div class="container mx-auto py-20">
         <h1 class="text-4xl font-bold text-center mb-8">Create New Order</h1>
 
+
         <form action="{{ route('orders.store') }}" method="POST" class="max-w-lg mx-auto bg-gray-800 p-6 rounded">
             @csrf
 
             <div class="mb-4">
                 <label for="bowling_alleyid" class="block text-sm font-medium">Bowling Alley Number</label>
-                <input type="number" name="bowling_alleyid" id="bowling_alleyid" class="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded" required>
+                <input type="number" name="bowling_alleyid" id="bowling_alleyid" class="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded" max="10">
+                @error('bowling_alleyid')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="mb-4">
                 <label for="product" class="block text-sm font-medium">Product</label>
-                <select name="product" id="product" class="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded" required>
+                <select name="product" id="product" class="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded" >
+                    <option value="" disabled selected>Select a product</option>
                     @foreach ($productPrices as $product => $price)
                         <option value="{{ $product }}">{{ $product }} - ${{ number_format($price, 2) }}</option>
                     @endforeach
                 </select>
+                @error('product')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="mb-4">

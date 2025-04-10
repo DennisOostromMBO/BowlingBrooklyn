@@ -35,8 +35,17 @@
                 </tr>
             </thead>
 
+            @php
+                $sortedOrders = $orders->sortBy(function ($order) {
+                    return [
+                        $order->status === 'pending' ? 0 : ($order->status === 'making' ? 1 : 2),
+                        $order->id
+                    ];
+                });
+            @endphp
+
             <tbody>
-                @forelse ($orders as $order)
+                @forelse ($sortedOrders as $order)
                     <tr class="hover:bg-gray-700">
                         <td class="border border-gray-700 px-4 py-2">{{ $order->bowling_alleyid }}</td>
                         <td class="border border-gray-700 px-4 py-2">{{ $order->product }}</td>
