@@ -22,3 +22,7 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+require __DIR__.'/wassim.php';
+require __DIR__.'/mahdi.php';
+require __DIR__.'/dennis.php';
+require __DIR__.'/daniel.php';
