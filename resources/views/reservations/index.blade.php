@@ -30,7 +30,7 @@
                     <td class="border border-gray-700 px-4 py-2">{{ $reservation->user->name }}</td>
                     <td class="border border-gray-700 px-4 py-2">{{ $reservation->ally_number }}</td>
                     <td class="border border-gray-700 px-4 py-2">{{ $reservation->number_of_persons }}</td>
-                    <td class="border border-gray-700 px-4 py-2">{{ $reservation->reservation_date }}</td> <!-- Added data -->
+                    <td class="border border-gray-700 px-4 py-2">{{ $reservation->reservation_date }}</td>
                     <td class="border border-gray-700 px-4 py-2">{{ $reservation->isactive ? 'Yes' : 'No' }}</td>
                     <td class="border border-gray-700 px-4 py-2">{{ $reservation->note }}</td>
                     <td class="border border-gray-700 px-4 py-2">
@@ -41,7 +41,13 @@
                         <form action="{{ route('reservations.destroy', $reservation->id) }}" method="POST" class="inline-block">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="delete" onclick="return confirm('Are you sure you want to delete this reservation?')">Delete</button>
+                            <button 
+                                type="submit" 
+                                class="delete {{ \Carbon\Carbon::parse($reservation->reservation_date)->isPast() ? 'bg-gray-500 cursor-not-allowed' : '' }}" 
+                                {{ \Carbon\Carbon::parse($reservation->reservation_date)->isPast() ? 'disabled' : '' }}
+                                onclick="return confirm('Are you sure you want to delete this reservation?')">
+                                Delete
+                            </button>
                         </form>
                     </td>
                 </tr>
