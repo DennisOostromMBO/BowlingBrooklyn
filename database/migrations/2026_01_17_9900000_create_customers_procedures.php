@@ -13,6 +13,7 @@ return new class extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS getCustomerById');
         DB::unprepared('DROP PROCEDURE IF EXISTS createCustomer');
         DB::unprepared('DROP PROCEDURE IF EXISTS updateCustomer');
+        DB::unprepared('DROP PROCEDURE IF EXISTS deleteCustomer');
 
         // Create procedures
         $pathGetAll = database_path('sp/CustomersSP/getAllCustomersSP.sql');
@@ -26,6 +27,9 @@ return new class extends Migration
 
         $pathUpdate = database_path('sp/CustomersSP/updateCustomerSP.sql');
         DB::unprepared(File::get($pathUpdate));
+
+        $pathDelete = database_path('sp/CustomersSP/deleteCustomerSP.sql');
+        DB::unprepared(File::get($pathDelete));
     }
 
     public function down(): void
@@ -34,5 +38,6 @@ return new class extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS getCustomerById');
         DB::unprepared('DROP PROCEDURE IF EXISTS createCustomer');
         DB::unprepared('DROP PROCEDURE IF EXISTS updateCustomer');
+        DB::unprepared('DROP PROCEDURE IF EXISTS deleteCustomer');
     }
 };

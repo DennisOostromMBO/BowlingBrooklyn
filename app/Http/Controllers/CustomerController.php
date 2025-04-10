@@ -48,4 +48,10 @@ class CustomerController extends Controller
 
         return redirect('/customers')->with('success', 'Customer updated successfully');
     }
+
+    public function destroy($id)
+    {
+        DB::select('CALL deleteCustomer(?)', [$id]);
+        return redirect('/customers')->with('success', 'Customer deleted successfully');
+    }
 }

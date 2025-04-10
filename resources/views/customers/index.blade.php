@@ -11,6 +11,12 @@
     <x-navbar />
 
     <div class="container mx-auto py-20">
+        @if (session('success'))
+            <div class="bg-green-500 text-white px-4 py-3 rounded relative mb-4" role="alert">
+                <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
+        @endif
+
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-4xl font-bold text-center">Customers</h1>
             <a href="#" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -46,7 +52,12 @@
                             <a href="/customers/{{ $customer->id }}/edit" class="text-blue-500 hover:text-blue-700 text-xl">✏️</a>
                         </td>
                         <td class="border border-gray-700 px-4 py-2 text-center">
-                            <button class="text-red-500 hover:text-red-700 text-xl">❌</button>
+                            <form method="POST" action="/customers/{{ $customer->id }}" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="return confirm('Are you sure you want to delete this customer?')" 
+                                    class="text-red-500 hover:text-red-700 text-xl">❌</button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach
