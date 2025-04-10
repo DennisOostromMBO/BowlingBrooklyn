@@ -10,6 +10,12 @@
     <x-navbar />
 
     <div class="container mx-auto py-20">
+        @if ($errors->has('email'))
+            <div class="bg-red-500 text-white px-6 py-4 rounded-lg text-lg mb-8 text-center font-semibold">
+                {{ $errors->first('email') }}
+            </div>
+        @endif
+
         <h1 class="text-4xl font-bold text-center mb-8">Create New Customer</h1>
         <div class="bg-gray-800 p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
             <form method="POST" action="/customers" class="space-y-6">
@@ -70,7 +76,7 @@
                     <div>
                         <label class="block text-sm font-medium">Email</label>
                         <input type="email" name="email" value="{{ old('email') }}" 
-                            class="mt-1 block w-full rounded bg-white border-gray-300 text-gray-900 px-3 py-2">
+                            class="mt-1 block w-full rounded bg-white border-gray-300 text-gray-900 px-3 py-2 @error('email') border-red-500 @enderror">
                     </div>
                 </div>
                 

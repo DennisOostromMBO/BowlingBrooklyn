@@ -20,6 +20,15 @@ class CustomerController extends Controller
 
     public function store(Request $request)
     {
+        // First check if email exists
+        $emailExists = DB::select('SELECT COUNT(*) as count FROM users WHERE email = ?', [$request->email])[0]->count > 0;
+        
+        if ($emailExists) {
+            return back()
+                ->withInput()
+                ->withErrors(['email' => 'This email address is already associated with a customer.']);
+        }
+
         $validatedData = $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
