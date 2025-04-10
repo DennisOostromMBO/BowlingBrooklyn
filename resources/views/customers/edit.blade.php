@@ -47,6 +47,11 @@
                             class="mt-1 block w-full rounded bg-white border-gray-300 text-gray-900 px-3 py-2">
                     </div>
                     <div>
+                        <label class="block text-sm font-medium">Date of Birth</label>
+                        <input type="date" name="date_of_birth" value="{{ old('date_of_birth', $customer->date_of_birth) }}" 
+                            class="mt-1 block w-full rounded bg-white border-gray-300 text-gray-900 px-3 py-2">
+                    </div>
+                    <div>
                         <label class="block text-sm font-medium">Customer Number</label>
                         <input type="text" value="{{ $customer->customer_number }}" 
                             class="mt-1 block w-full rounded bg-white border-gray-300 text-gray-900 px-3 py-2" readonly>

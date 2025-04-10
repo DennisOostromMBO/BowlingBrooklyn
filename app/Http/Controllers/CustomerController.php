@@ -117,6 +117,7 @@ class CustomerController extends Controller
         $validatedData = $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
+            'date_of_birth' => 'required|date',
             'street_name' => 'required',
             'house_number' => 'required',
             'postal_code' => 'required',
@@ -125,11 +126,12 @@ class CustomerController extends Controller
             'email' => 'required|email'
         ]);
 
-        DB::select('CALL updateCustomer(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+        DB::select('CALL updateCustomer(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
             $id,
             $validatedData['first_name'],
             $request->infix,
             $validatedData['last_name'],
+            $validatedData['date_of_birth'],  // Added date_of_birth parameter
             $validatedData['street_name'],
             $validatedData['house_number'],
             $request->addition,

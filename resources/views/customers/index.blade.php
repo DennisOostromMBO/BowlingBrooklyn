@@ -27,6 +27,7 @@
             <thead>
                 <tr>
                     <th class="border border-gray-700 px-4 py-2">Name</th>
+                    <th class="border border-gray-700 px-4 py-2">Age Category</th>
                     <th class="border border-gray-700 px-4 py-2">Address</th>
                     <th class="border border-gray-700 px-4 py-2">Customer Number</th>
                     <th class="border border-gray-700 px-4 py-2">Phone</th>
@@ -40,6 +41,9 @@
                     <tr class="hover:bg-gray-700">
                         <td class="border border-gray-700 px-4 py-2">
                             {{ $customer->first_name }} {{ $customer->infix }} {{ $customer->last_name }}
+                        </td>
+                        <td class="border border-gray-700 px-4 py-2">
+                            {{ $customer->age_category }}
                         </td>
                         <td class="border border-gray-700 px-4 py-2">
                             {{ $customer->street_name }} {{ $customer->house_number }}{{ $customer->addition }}<br>

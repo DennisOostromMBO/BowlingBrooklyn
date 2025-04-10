@@ -5,6 +5,7 @@ BEGIN
         p.first_name,
         p.infix,
         p.last_name,
+        p.date_of_birth,
         c.street_name,
         c.house_number,
         c.addition,

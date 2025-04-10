@@ -3,6 +3,7 @@ CREATE PROCEDURE updateCustomer(
     IN p_first_name VARCHAR(255),
     IN p_infix VARCHAR(255),
     IN p_last_name VARCHAR(255),
+    IN p_date_of_birth DATE,
     IN p_street_name VARCHAR(255),
     IN p_house_number VARCHAR(10),
     IN p_addition VARCHAR(10),
@@ -19,6 +20,7 @@ BEGIN
         p.first_name = p_first_name,
         p.infix = p_infix,
         p.last_name = p_last_name,
+        p.date_of_birth = p_date_of_birth,
         p.updated_at = NOW()
     WHERE cu.id = customerId;
 
