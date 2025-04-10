@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('bowling_alleyid');
             $table->enum('product', ['Pizza', 'Nachos', 'Drinks Package', 'Burger', 'VIP Package', 'Wings', 'Fries', 'Snack Platter', 'Premium Drinks', 'Kids Menu']);
-            $table->enum('status', ['send', 'making']);
+            $table->enum('status', ['send', 'making', 'pending']);
             $table->decimal('price', 8, 2)->storedAs("CASE 
                 WHEN product = 'Pizza' THEN 10.00
                 WHEN product = 'Nachos' THEN 8.00
@@ -28,7 +28,7 @@ return new class extends Migration
                 WHEN product = 'Premium Drinks' THEN 25.00
                 WHEN product = 'Kids Menu' THEN 7.00
                 ELSE 0.00 END");
-            $table->decimal('total_price', 10, 2);
+            $table->decimal('total_price', 10, 2)->default(0.00);
             $table->boolean('isactive')->default(true);
             $table->text('note')->nullable();
             $table->timestamps();

@@ -30,15 +30,6 @@
             </div>
 
             <div class="mb-4">
-                <label for="status" class="block text-sm font-medium">Status</label>
-                <select name="status" id="status" class="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded" required>
-                    <option value="pending">Pending</option>
-                    <option value="completed">Completed</option>
-                    <option value="send">Send</option>
-                </select>
-            </div>
-
-            <div class="mb-4">
                 <label for="note" class="block text-sm font-medium">Note</label>
                 <textarea name="note" id="note" rows="3" class="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded"></textarea>
             </div>

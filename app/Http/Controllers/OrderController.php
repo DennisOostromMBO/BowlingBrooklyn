@@ -16,17 +16,19 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'customerid' => 'required|integer',
-            'totalamount' => 'required|numeric',
-            'status' => 'required|string|max:50',
-            'ispaid' => 'required|boolean',
+            'bowling_alleyid' => 'required|integer',
+            'product' => 'required|string|max:255',
             'note' => 'nullable|string|max:255',
-            'datecreated' => 'required|date',
-            'datemodified' => 'required|date',
         ]);
 
-        $order = Order::create($validated);
-        return response()->json($order, 201);
+        $order = new Order();
+        $order->bowling_alleyid = $validated['bowling_alleyid'];
+        $order->product = $validated['product'];
+        $order->note = $validated['note'] ?? null;
+        $order->status = (string) 'pending'; // Default status as string
+        $order->save();
+
+        return redirect()->route('orders.index')->with('success', 'Order created successfully.');
     }
 
     public function show($id)
