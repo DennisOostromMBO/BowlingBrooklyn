@@ -60,7 +60,6 @@
 
             <!-- Live Rankings -->
             <div class="w-full md:w-1/2 md:ml-4 mt-4 md:mt-0">
-                <h2 class="text-2xl font-bold text-center mb-4">Live Rankings</h2>
                 <table class="w-full border-collapse bg-gray-800 text-gray-200">
                     <thead>
                         <tr>
@@ -82,6 +81,17 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+
+        <!-- Add Teammate Section -->
+        <div class="mt-6">
+            <h2 class="text-2xl font-bold text-center mb-4">Add New Teammate</h2>
+            <div class="flex items-center space-x-4">
+                <input type="text" id="new_teammate_name" placeholder="Teammate Name" class="w-1/2 px-4 py-2 bg-gray-700 text-gray-200 rounded-lg">
+                <input type="number" id="new_teammate_score" placeholder="Score" class="w-1/4 px-4 py-2 bg-gray-700 text-gray-200 rounded-lg">
+                <button type="button" id="add-teammate" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Add Teammate</button>
+            </div>
+            <p id="teammate-error" class="text-red-500 mt-2 hidden">Maximum of 8 teammates reached!</p>
         </div>
     @endif
 </div>
@@ -204,4 +214,53 @@
             rankings.appendChild(row);
         });
     }
+
+    let teammateCount = {{ count($participants) }};
+    const maxTeammates = 8;
+
+    document.getElementById('add-teammate').addEventListener('click', () => {
+        if (teammateCount >= maxTeammates) {
+            document.getElementById('teammate-error').classList.remove('hidden');
+            return;
+        }
+
+        const name = document.getElementById('new_teammate_name').value.trim();
+        const score = document.getElementById('new_teammate_score').value.trim();
+
+        if (!name || !score) {
+            alert('Please provide both a name and a score for the teammate.');
+            return;
+        }
+
+        // Add the new teammate to the rankings table
+        const rankings = document.getElementById('rankings');
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td class="border border-gray-700 px-4 py-2">${name}</td>
+            <td class="border border-gray-700 px-4 py-2">${score}</td>
+            <td class="border border-gray-700 px-4 py-2">New</td>
+        `;
+        rankings.appendChild(newRow);
+
+        // Add hidden inputs to the form for submission
+        const scoresForm = document.getElementById('scores-form');
+        const nameInput = document.createElement('input');
+        nameInput.type = 'hidden';
+        nameInput.name = `new_members[${teammateCount}][name]`;
+        nameInput.value = name;
+
+        const scoreInput = document.createElement('input');
+        scoreInput.type = 'hidden';
+        scoreInput.name = `new_members[${teammateCount}][score]`;
+        scoreInput.value = score;
+
+        scoresForm.appendChild(nameInput);
+        scoresForm.appendChild(scoreInput);
+
+        // Clear the input fields
+        document.getElementById('new_teammate_name').value = '';
+        document.getElementById('new_teammate_score').value = '';
+
+        teammateCount++;
+    });
 </script>

@@ -36,11 +36,13 @@ class ScoreController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'reservation_id' => 'required|integer',
+            'reservation_id' => 'required|integer|exists:reservations,id',
             'scores' => 'required|array',
             'scores.*' => 'required|integer|min:0',
             'team_name' => 'nullable|string|max:255',
-            'participant_names' => 'array', // Add validation for participant names
+            'new_members' => 'array',
+            'new_members.*.name' => 'required|string|max:255',
+            'new_members.*.score' => 'required|integer|min:0',
         ]);
 
         // Use custom team name if provided, otherwise generate from reservation
@@ -52,67 +54,44 @@ class ScoreController extends Controller
         // Calculate total points from registered participants
         $totalPoints = array_sum($validated['scores']);
 
-        // Create a single score record with all teammate data
+        // Prepare the score data
         $scoreData = [
             'reservation_id' => $validated['reservation_id'],
-            'points' => $totalPoints,  // Will be updated with additional points later
-            'round' => 1, // Assuming round 1 for simplicity
+            'points' => $totalPoints,
+            'round' => 1,
             'status' => 'In progress',
             'isactive' => true,
             'note' => null,
-            'team_name' => $teamName, // No "Team" prefix - use clean name
-            // Initialize all teammate fields to null
-            'teammate1' => null,
-            'teammate1_score' => null,
-            'teammate2' => null,
-            'teammate2_score' => null,
-            'teammate3' => null,
-            'teammate3_score' => null,
-            'teammate4' => null,
-            'teammate4_score' => null,
-            'teammate5' => null,
-            'teammate5_score' => null,
-            'teammate6' => null,
-            'teammate6_score' => null,
-            'teammate7' => null,
-            'teammate7_score' => null,
-            'teammate8' => null,
-            'teammate8_score' => null,
-            'created_at' => now(),
-            'updated_at' => now(),
+            'team_name' => $teamName,
         ];
 
-        // Add registered teammates data
+        // Add teammates to the score data
         $teammateIndex = 1;
         foreach ($validated['scores'] as $userId => $score) {
             if ($teammateIndex <= 8) {
-                // Use participant names if provided, otherwise use user ID
-                $name = isset($request->participant_names[$userId]) ? $request->participant_names[$userId] : "Player {$teammateIndex}";
-                $scoreData["teammate{$teammateIndex}"] = $name;
+                $scoreData["teammate{$teammateIndex}"] = "Player {$teammateIndex}";
                 $scoreData["teammate{$teammateIndex}_score"] = $score;
                 $teammateIndex++;
             }
         }
 
         // Add new members if space allows
-        if (!empty($request->new_members)) {
-            foreach ($request->new_members as $member) {
-                if ($teammateIndex <= 8 && isset($member['name']) && isset($member['score'])) {
-                    $scoreData["teammate{$teammateIndex}"] = $member['name'];
-                    $scoreData["teammate{$teammateIndex}_score"] = $member['score'];
-                    $totalPoints += (int)$member['score']; // Add to total points
-                    $teammateIndex++;
-                }
+        foreach ($validated['new_members'] as $newMember) {
+            if ($teammateIndex <= 8) {
+                $scoreData["teammate{$teammateIndex}"] = $newMember['name'];
+                $scoreData["teammate{$teammateIndex}_score"] = $newMember['score'];
+                $totalPoints += $newMember['score'];
+                $teammateIndex++;
             }
         }
 
-        // Update the total points to include new members
+        // Update the total points
         $scoreData['points'] = $totalPoints;
 
-        // Insert the complete score record
+        // Save the score
         \DB::table('scores')->insert($scoreData);
 
-        return redirect()->route('scores.index')->with('success', 'Scores successfully saved.');
+        return redirect()->route('scores.index')->with('success', 'Score saved successfully!');
     }
 
     public function show($id)
