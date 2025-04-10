@@ -10,9 +10,18 @@
     <x-navbar />
 
     <div class="container mx-auto py-20">
-        @if ($errors->has('email'))
-            <div class="bg-red-500 text-white px-6 py-4 rounded-lg text-lg mb-8 text-center font-semibold">
-                {{ $errors->first('email') }}
+        @if ($errors->has('email') || $errors->has('phone'))
+            <div class="space-y-4">
+                @if ($errors->has('email'))
+                    <div class="bg-red-500 text-white px-6 py-4 rounded-lg text-lg text-center font-semibold">
+                        {{ $errors->first('email') }}
+                    </div>
+                @endif
+                @if ($errors->has('phone'))
+                    <div class="bg-red-500 text-white px-6 py-4 rounded-lg text-lg text-center font-semibold">
+                        {{ $errors->first('phone') }}
+                    </div>
+                @endif
             </div>
         @endif
 

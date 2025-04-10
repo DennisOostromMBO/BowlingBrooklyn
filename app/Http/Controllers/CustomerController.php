@@ -20,13 +20,22 @@ class CustomerController extends Controller
 
     public function store(Request $request)
     {
-        // First check if email exists
+        // Check if email exists
         $emailExists = DB::select('SELECT COUNT(*) as count FROM users WHERE email = ?', [$request->email])[0]->count > 0;
         
         if ($emailExists) {
             return back()
                 ->withInput()
                 ->withErrors(['email' => 'This email address is already associated with a customer.']);
+        }
+
+        // Check if phone exists
+        $phoneExists = DB::select('SELECT COUNT(*) as count FROM users WHERE phone = ?', [$request->phone])[0]->count > 0;
+        
+        if ($phoneExists) {
+            return back()
+                ->withInput()
+                ->withErrors(['phone' => 'This phone number is already associated with a customer.']);
         }
 
         $validatedData = $request->validate([
@@ -66,6 +75,32 @@ class CustomerController extends Controller
 
     public function update(Request $request, $id)
     {
+        // Check if email exists for other customers
+        $emailExists = DB::select('SELECT COUNT(*) as count FROM users u 
+            INNER JOIN persons p ON u.person_id = p.id 
+            INNER JOIN customers c ON p.id = c.persons_id 
+            WHERE u.email = ? AND c.id != ?', 
+            [$request->email, $id])[0]->count > 0;
+        
+        if ($emailExists) {
+            return back()
+                ->withInput()
+                ->withErrors(['email' => 'This email address is already associated with another customer.']);
+        }
+
+        // Check if phone exists for other customers
+        $phoneExists = DB::select('SELECT COUNT(*) as count FROM users u 
+            INNER JOIN persons p ON u.person_id = p.id 
+            INNER JOIN customers c ON p.id = c.persons_id 
+            WHERE u.phone = ? AND c.id != ?', 
+            [$request->phone, $id])[0]->count > 0;
+        
+        if ($phoneExists) {
+            return back()
+                ->withInput()
+                ->withErrors(['phone' => 'This phone number is already associated with another customer.']);
+        }
+
         $validatedData = $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',

@@ -53,7 +53,7 @@ BEGIN
         updated_at
     ) VALUES (
         new_person_id,
-        CONCAT('BB', LPAD(next_number, 3, '0')),
+        CONCAT('BB', LPAD(next_number, 4, '0')),  
         true,
         NOW(),
         NOW()

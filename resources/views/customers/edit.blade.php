@@ -10,6 +10,21 @@
     <x-navbar />
 
     <div class="container mx-auto py-20">
+        @if ($errors->has('email') || $errors->has('phone'))
+            <div class="space-y-4">
+                @if ($errors->has('email'))
+                    <div class="bg-red-500 text-white px-6 py-4 rounded-lg text-lg text-center font-semibold">
+                        {{ $errors->first('email') }}
+                    </div>
+                @endif
+                @if ($errors->has('phone'))
+                    <div class="bg-red-500 text-white px-6 py-4 rounded-lg text-lg text-center font-semibold">
+                        {{ $errors->first('phone') }}
+                    </div>
+                @endif
+            </div>
+        @endif
+
         <h1 class="text-4xl font-bold text-center mb-8">Edit Customer</h1>
         <div class="bg-gray-800 p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
             <form method="POST" action="/customers/{{ $customer->id }}" class="space-y-6">
