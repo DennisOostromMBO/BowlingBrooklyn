@@ -31,5 +31,30 @@
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save Changes</button>
         </form>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const productInputs = document.querySelectorAll('input[name="product"]');
+            const priceDisplay = document.createElement('p');
+            priceDisplay.classList.add('text-lg', 'font-bold', 'mt-4');
+            document.querySelector('form').insertBefore(priceDisplay, document.querySelector('button'));
+
+            const productPrices = @json($productPrices); // Use product prices passed from the controller
+
+            const updatePrice = () => {
+                const selectedProduct = document.querySelector('input[name="product"]:checked');
+                if (selectedProduct) {
+                    priceDisplay.textContent = `Price: $${productPrices[selectedProduct.value].toFixed(2)}`;
+                } else {
+                    priceDisplay.textContent = '';
+                }
+            };
+
+            productInputs.forEach(input => {
+                input.addEventListener('change', updatePrice);
+            });
+
+            updatePrice(); // Initialize price on page load
+        });
+    </script>
 </body>
 </html>

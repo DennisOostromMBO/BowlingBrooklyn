@@ -41,9 +41,30 @@
                         <td class="border border-gray-700 px-4 py-2">{{ $order->bowling_alleyid }}</td>
                         <td class="border border-gray-700 px-4 py-2">{{ $order->product }}</td>
                         <td class="border border-gray-700 px-4 py-2">{{ $order->status }}</td>
-                        <td class="border border-gray-700 px-4 py-2">{{ $order->total_price }}</td>
                         <td class="border border-gray-700 px-4 py-2">
-                            <a href="{{ route('orders.edit', $order->id) }}" class="edit bg-blue-500 text-white px-2 py-1 rounded">Edit</a>
+                            @php
+                                $prices = [
+                                    'Pizza' => 10.00,
+                                    'Nachos' => 8.00,
+                                    'Drinks Package' => 15.00,
+                                    'Burger' => 12.00,
+                                    'VIP Package' => 50.00,
+                                    'Wings' => 9.00,
+                                    'Fries' => 5.00,
+                                    'Snack Platter' => 20.00,
+                                    'Premium Drinks' => 25.00,
+                                    'Kids Menu' => 7.00
+                                ];
+                                $price = $prices[$order->product] ?? 0.00;
+                            @endphp
+                            {{ number_format($price, 2) }}
+                        </td>
+                        <td class="border border-gray-700 px-4 py-2">
+                            @if ($order->status !== 'send')
+                                <a href="{{ route('orders.edit', $order->id) }}" class="edit bg-blue-500 text-white px-2 py-1 rounded">Edit</a>
+                            @else
+                                <span class="bg-gray-500 text-white px-2 py-1 rounded cursor-not-allowed">Edit</span>
+                            @endif
                             <form action="{{ route('orders.destroy', $order->id) }}" method="POST" class="inline-block">
                                 @csrf
                                 @method('DELETE')
@@ -58,6 +79,9 @@
                 @endforelse
             </tbody>
         </table>
+        <div class="text-center mt-8">
+            <a href="#" class="bg-blue-500 text-white px-4 py-2 rounded">Order here</a>
+        </div>
     </div>
 
     <!-- Footer -->
