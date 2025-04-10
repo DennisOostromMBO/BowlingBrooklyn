@@ -9,6 +9,13 @@
 <body class="bg-gray-900 text-gray-200">
     <x-navbar />
 
+    <!-- Success Message -->
+    @if (session('success'))
+        <div id="success-message" class="bg-green-500 text-white text-center py-2 px-4 mb-4">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <!-- Reservations Content -->
     <div class="container mx-auto py-20">
         <h1 class="text-4xl font-bold text-center mb-8">Reservations</h1>
@@ -80,5 +87,17 @@
             <p>&copy; 2025 Bowling Brooklyn. All rights reserved.</p>
         </div>
     </footer>
+
+    <!-- Auto-hide Success Message -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const successMessage = document.getElementById('success-message');
+            if (successMessage) {
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 5000); // Hide after 5 seconds
+            }
+        });
+    </script>
 </body>
 </html>
