@@ -56,6 +56,9 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($id);
         $order->delete();
-        return response()->json(null, 204);
+        
+        // Optionally, you can return a response or redirect
+        return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
+
     }
 }

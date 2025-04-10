@@ -8,6 +8,12 @@
 </head>
 <body class="bg-gray-900 text-gray-200">
     <x-navbar />
+    <div class="container mx-auto py-20">
+        @if (session('success'))
+            <div class="bg-green-500 text-white text-center py-2 mb-4 rounded">
+                {{ session('success') }}
+            </div>
+        @endif
 
     <!-- Orders Content -->
     <div class="container mx-auto py-20">
@@ -16,24 +22,25 @@
             <thead>
                 <tr>
                     <th class="border border-gray-700 px-4 py-2">alley Nummber</th>
+                    <th class="border border-gray-700 px-4 py-2">Image</th>
                     <th class="border border-gray-700 px-4 py-2">Total Amount</th>
-                    <th class="border border-gray-700 px-4 py-2">Order</th>
-                    <th class="border border-gray-700 px-4 py-2">Is Paid</th>
-                    <th class="border border-gray-700 px-4 py-2">Note</th>
                     <th class="border border-gray-700 px-4 py-2">Actions</th>
                 </tr>
             </thead>
+
             <tbody>
                 @forelse ($orders as $order)
                     <tr class="hover:bg-gray-700">
                         <td class="border border-gray-700 px-4 py-2">{{ $order->bowling_alleyid }}</td>
-                        <td class="border border-gray-700 px-4 py-2">{{ $order->total_price}}</td>
                         <td class="border border-gray-700 px-4 py-2">{{ $order->product }}</td>
-                        <td class="border border-gray-700 px-4 py-2">{{ $order->ispaid ? 'Yes' : 'No' }}</td>
-                        <td class="border border-gray-700 px-4 py-2">{{ $order->note }}</td>
+                        <td class="border border-gray-700 px-4 py-2">{{ $order->total_price }}</td>
                         <td class="border border-gray-700 px-4 py-2">
                             <button class="edit bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
-                            <button class="delete bg-red-500 text-white px-2 py-1 rounded">Delete</button>
+                            <form action="{{ route('orders.destroy', $order->id) }}" method="POST" class="inline-block">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="delete bg-red-500 text-white px-2 py-1 rounded" onclick="return confirm('Are you sure you want to delete this order?')">Delete</button>
+                            </form>
                         </td>
                     </tr>
                 @empty
