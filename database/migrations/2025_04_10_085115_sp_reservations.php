@@ -24,6 +24,11 @@ return new class extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS spDeleteReservation');
         $sqlDelete = file_get_contents(database_path('sp/ReservationsSP/spDeleteReservation.sql'));
         DB::unprepared($sqlDelete);
+
+        // Drop and create spCreateReservation
+        DB::unprepared('DROP PROCEDURE IF EXISTS spCreateReservation');
+        $sqlCreate = file_get_contents(database_path('sp/ReservationsSP/spCreateReservation.sql'));
+        DB::unprepared($sqlCreate);
     }
 
     /**
@@ -34,5 +39,6 @@ return new class extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS spGetAllReservations');
         DB::unprepared('DROP PROCEDURE IF EXISTS spUpdateReservation');
         DB::unprepared('DROP PROCEDURE IF EXISTS spDeleteReservation');
+        DB::unprepared('DROP PROCEDURE IF EXISTS spCreateReservation');
     }
 };

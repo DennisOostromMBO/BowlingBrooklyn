@@ -59,9 +59,11 @@
 
         <!-- Pagination and Create Button -->
         <div class="flex justify-between items-center mt-4">
+            <!-- Create Reservation Button -->
             <a href="{{ route('reservations.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
                 Create Reservation
             </a>
+            <!-- Pagination Links -->
             <div class="pagination-links">
                 {{ $reservations->links('pagination::tailwind') }}
             </div>
