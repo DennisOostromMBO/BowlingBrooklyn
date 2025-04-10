@@ -55,10 +55,14 @@ class OrderController extends Controller
     public function destroy($id)
     {
         $order = Order::findOrFail($id);
-        $order->delete();
-        
-        // Optionally, you can return a response or redirect
-        return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
 
+        // Prevent deletion if the status is "send"
+        if ($order->status === 'send') {
+            return redirect()->route('orders.index')->with('error', 'Orders that are already send cant be deleted.');
+        }
+    
+        $order->delete();
+    
+        return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
     }
 }

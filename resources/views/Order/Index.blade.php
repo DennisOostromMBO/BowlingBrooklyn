@@ -14,6 +14,11 @@
                 {{ session('success') }}
             </div>
         @endif
+        @if (session('error'))
+    <div class="bg-red-500 text-white text-center py-2 mb-4 rounded">
+        {{ session('error') }}
+    </div>
+@endif
 
     <!-- Orders Content -->
     <div class="container mx-auto py-20">
@@ -22,7 +27,8 @@
             <thead>
                 <tr>
                     <th class="border border-gray-700 px-4 py-2">alley Nummber</th>
-                    <th class="border border-gray-700 px-4 py-2">Image</th>
+                    <th class="border border-gray-700 px-4 py-2">Producten</th>
+                    <th class="border border-gray-700 px-4 py-2">Status</th>
                     <th class="border border-gray-700 px-4 py-2">Total Amount</th>
                     <th class="border border-gray-700 px-4 py-2">Actions</th>
                 </tr>
@@ -33,6 +39,7 @@
                     <tr class="hover:bg-gray-700">
                         <td class="border border-gray-700 px-4 py-2">{{ $order->bowling_alleyid }}</td>
                         <td class="border border-gray-700 px-4 py-2">{{ $order->product }}</td>
+                        <td class="border border-gray-700 px-4 py-2">{{ $order->status }}</td>
                         <td class="border border-gray-700 px-4 py-2">{{ $order->total_price }}</td>
                         <td class="border border-gray-700 px-4 py-2">
                             <button class="edit bg-blue-500 text-white px-2 py-1 rounded">Edit</button>

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('bowling_alleyid');
             $table->string('product');
+            $table->enum('status', ['send', 'making']);
             $table->decimal('price', 8, 2);
             $table->decimal('total_price', 10, 2);
             $table->boolean('isactive')->default(true);
