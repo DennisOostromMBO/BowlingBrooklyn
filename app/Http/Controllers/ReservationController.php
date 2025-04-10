@@ -27,7 +27,17 @@ class ReservationController extends Controller
             'ally_number' => [
                 'required',
                 'integer',
-                'unique:reservations,ally_number', // Ensure ally_number is unique
+                function ($attribute, $value, $fail) use ($request) {
+                    // Check if the same ally_number exists for the same reservation_date
+                    $exists = DB::table('reservations')
+                        ->where('ally_number', $value)
+                        ->where('reservation_date', $request->reservation_date)
+                        ->exists();
+
+                    if ($exists) {
+                        $fail('The selected ally number is already reserved for this date.');
+                    }
+                },
             ],
             'number_of_persons' => 'required|integer',
             'reservation_date' => [
@@ -61,7 +71,18 @@ class ReservationController extends Controller
             'ally_number' => [
                 'required',
                 'integer',
-                'unique:reservations,ally_number,' . $id, // Ensure ally_number is unique, excluding the current reservation
+                function ($attribute, $value, $fail) use ($request, $id) {
+                    // Check if the same ally_number exists for the same reservation_date, excluding the current reservation
+                    $exists = DB::table('reservations')
+                        ->where('ally_number', $value)
+                        ->where('reservation_date', $request->reservation_date)
+                        ->where('id', '!=', $id)
+                        ->exists();
+
+                    if ($exists) {
+                        $fail('The selected ally number is already reserved for this date.');
+                    }
+                },
             ],
             'number_of_persons' => 'required|integer',
             'reservation_date' => [
