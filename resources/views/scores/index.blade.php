@@ -4,13 +4,31 @@
 <div class="container mx-auto py-20">
     <h1 class="text-4xl font-bold text-center mb-8">Score Overview</h1>
 
+    <!-- Success and Error Messages -->
+    @if(session('success'))
+        <div class="bg-green-500 text-white p-4 rounded-lg mb-6">
+            <p>{{ session('success') }}</p>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="bg-red-500 text-white p-4 rounded-lg mb-6">
+            <p>{{ session('error') }}</p>
+        </div>
+    @endif
+
     <!-- Search Bar -->
     <form method="GET" action="{{ route('scores.index') }}" class="mb-4">
         <input type="text" name="search" placeholder="Search by team name, points or user..." value="{{ request('search') }}" class="w-full px-4 py-2 bg-gray-700 text-gray-200 rounded-lg">
     </form>
 
     @if($scores->isEmpty())
-        <p class="text-center text-gray-500">No information available for these scores</p>
+        <div class="bg-gray-800 p-8 rounded-lg shadow-lg text-center">
+            <p class="text-gray-400 text-xl">Geen informatie beschikbaar over deze scores</p>
+            <a href="{{ route('scores.create') }}" class="inline-block mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                Voeg Score Toe
+            </a>
+        </div>
     @else
         <table class="w-full border-collapse bg-gray-800 text-gray-200">
             <thead>
@@ -35,16 +53,19 @@
                             <button type="button" class="toggle-dropdown bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded" data-team="{{ $score->id }}">View Team</button>
                             
                             @if($score->status != 'Confirmed')
-                                <a href="{{ route('scores.edit', $score->id) }}" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded">Edit</a>
+                                <a href="{{ route('scores.edit', $score->id) }}" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded">Bewerken</a>
                                 
                                 <form method="POST" action="{{ route('scores.destroy', $score->id) }}" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded" onclick="return confirm('Are you sure you want to delete this score?')">Delete</button>
+                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded" 
+                                        onclick="return confirm('Weet u zeker dat u deze score wilt verwijderen?')">Verwijderen</button>
                                 </form>
                             @else
-                                <span class="bg-gray-500 text-white font-bold py-2 px-4 rounded opacity-50 cursor-not-allowed">Edit</span>
-                                <span class="bg-gray-500 text-white font-bold py-2 px-4 rounded opacity-50 cursor-not-allowed">Delete</span>
+                                <span class="bg-gray-500 text-white font-bold py-2 px-4 rounded opacity-50 cursor-not-allowed" 
+                                      title="Deze score is bevestigd en kan niet meer worden bewerkt">Bewerken</span>
+                                <span class="bg-gray-500 text-white font-bold py-2 px-4 rounded opacity-50 cursor-not-allowed"
+                                      title="Deze score is bevestigd en kan niet meer worden verwijderd">Verwijderen</span>
                             @endif
                         </td>
                     </tr>
