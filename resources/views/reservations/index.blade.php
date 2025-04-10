@@ -18,6 +18,7 @@
                     <th class="border border-gray-700 px-4 py-2">User</th>
                     <th class="border border-gray-700 px-4 py-2">Ally Number</th>
                     <th class="border border-gray-700 px-4 py-2">Number of Persons</th>
+                    <th class="border border-gray-700 px-4 py-2">Reservation Date</th> <!-- Added column -->
                     <th class="border border-gray-700 px-4 py-2">Active</th>
                     <th class="border border-gray-700 px-4 py-2">Note</th>
                     <th class="border border-gray-700 px-4 py-2">Actions</th>
@@ -29,6 +30,7 @@
                     <td class="border border-gray-700 px-4 py-2">{{ $reservation->user->name }}</td>
                     <td class="border border-gray-700 px-4 py-2">{{ $reservation->ally_number }}</td>
                     <td class="border border-gray-700 px-4 py-2">{{ $reservation->number_of_persons }}</td>
+                    <td class="border border-gray-700 px-4 py-2">{{ $reservation->reservation_date }}</td> <!-- Added data -->
                     <td class="border border-gray-700 px-4 py-2">{{ $reservation->isactive ? 'Yes' : 'No' }}</td>
                     <td class="border border-gray-700 px-4 py-2">{{ $reservation->note }}</td>
                     <td class="border border-gray-700 px-4 py-2">
