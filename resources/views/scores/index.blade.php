@@ -2,9 +2,19 @@
 <x-navbar />
 
 <div class="container mx-auto py-20">
-    <h1 class="text-4xl font-bold text-center mb-8">Score Overview</h1>
+    <h1 class="text-4xl font-bold text-center mb-8">Scores</h1>
 
-    <!-- Success and Error Messages -->
+    @if ($errors->any())
+        <div class="bg-red-500 text-white p-4 rounded-lg mb-6">
+            <h3 class="font-bold mb-2">There were some errors:</h3>
+            <ul class="list-disc list-inside">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     @if(session('success'))
         <div class="bg-green-500 text-white p-4 rounded-lg mb-6">
             <p>{{ session('success') }}</p>
@@ -24,9 +34,9 @@
 
     @if($scores->isEmpty())
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg text-center">
-            <p class="text-gray-400 text-xl">Geen informatie beschikbaar over deze scores</p>
+            <p class="text-gray-400 text-xl">No scores available at the moment.</p>
             <a href="{{ route('scores.create') }}" class="inline-block mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-                Voeg Score Toe
+                Add Score
             </a>
         </div>
     @else
@@ -51,21 +61,21 @@
                         </td>
                         <td class="border border-gray-700 px-4 py-2 space-x-2">
                             <button type="button" class="toggle-dropdown bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded" data-team="{{ $score->id }}">View Team</button>
-                            
+
                             @if($score->status != 'Confirmed')
-                                <a href="{{ route('scores.edit', $score->id) }}" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded">Bewerken</a>
-                                
+                                <a href="{{ route('scores.edit', $score->id) }}" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded">Edit</a>
+
                                 <form method="POST" action="{{ route('scores.destroy', $score->id) }}" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded" 
-                                        onclick="return confirm('Weet u zeker dat u deze score wilt verwijderen?')">Verwijderen</button>
+                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                                        onclick="return confirm('Are you sure you want to delete this score?')">Delete</button>
                                 </form>
                             @else
-                                <span class="bg-gray-500 text-white font-bold py-2 px-4 rounded opacity-50 cursor-not-allowed" 
-                                      title="Deze score is bevestigd en kan niet meer worden bewerkt">Bewerken</span>
                                 <span class="bg-gray-500 text-white font-bold py-2 px-4 rounded opacity-50 cursor-not-allowed"
-                                      title="Deze score is bevestigd en kan niet meer worden verwijderd">Verwijderen</span>
+                                      title="This score is confirmed and cannot be edited">Edit</span>
+                                <span class="bg-gray-500 text-white font-bold py-2 px-4 rounded opacity-50 cursor-not-allowed"
+                                      title="This score is confirmed and cannot be deleted">Delete</span>
                             @endif
                         </td>
                     </tr>
@@ -94,7 +104,7 @@
                                             return $a['score'] - $b['score'];
                                         });
                                     @endphp
-                                    
+
                                     @foreach($teammates as $teammate)
                                         <tr>
                                             <td class="border border-gray-700 px-4 py-2">{{ $teammate['name'] }}</td>
