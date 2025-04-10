@@ -38,11 +38,14 @@ class ScoreController extends Controller
         $validated = $request->validate([
             'reservation_id' => 'required|integer|exists:reservations,id',
             'scores' => 'required|array',
-            'scores.*' => 'required|integer|min:0',
+            'scores.*' => 'required|integer|min:0|max:300',
             'team_name' => 'nullable|string|max:255',
             'new_members' => 'array',
             'new_members.*.name' => 'required|string|max:255',
-            'new_members.*.score' => 'required|integer|min:0',
+            'new_members.*.score' => 'required|integer|min:0|max:300',
+        ], [
+            'scores.*.max' => 'The score for a participant must not exceed 300.',
+            'new_members.*.score.max' => 'The score of a teammate can be a maximum of 300.',
         ]);
 
         // Use custom team name if provided, otherwise generate from reservation

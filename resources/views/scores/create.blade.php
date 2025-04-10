@@ -5,6 +5,17 @@
 <div class="container mx-auto py-20">
     <h1 class="text-4xl font-bold text-center mb-8">Add Scores</h1>
 
+    @if ($errors->any())
+        <div class="bg-red-500 text-white p-4 rounded-lg mb-6">
+            <h3 class="font-bold mb-2">There were some errors with your submission:</h3>
+            <ul class="list-disc list-inside">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <!-- Leader Selection -->
     <form id="leader-form" method="GET" action="{{ route('scores.create') }}" class="mb-4">
         <label for="leader" class="block text-gray-200">Select Leader</label>
@@ -37,7 +48,8 @@
                 @foreach($participants as $participant)
                     <div class="mb-4">
                         <label for="score_{{ $participant->id }}" class="block text-gray-200">{{ $participant->name }}</label>
-                        <input type="number" id="score_{{ $participant->id }}" name="scores[{{ $participant->id }}]" class="score-input w-full px-4 py-2 bg-gray-700 text-gray-200 rounded-lg" required min="0">
+                        <input type="number" id="score_{{ $participant->id }}" name="scores[{{ $participant->id }}]" class="score-input w-full px-4 py-2 bg-gray-700 text-gray-200 rounded-lg" required min="0" max="300">
+                        <p class="text-sm text-gray-400 mt-1">Maximum score is 300.</p>
                         <input type="hidden" name="participant_names[{{ $participant->id }}]" value="{{ $participant->name }}">
                     </div>
                 @endforeach
@@ -47,7 +59,8 @@
                     <h3 class="text-xl font-bold text-center mb-4">Add New Teammate</h3>
                     <div class="flex items-center space-x-4">
                         <input type="text" id="new_teammate_name" placeholder="Teammate Name" class="w-1/2 px-4 py-2 bg-gray-700 text-gray-200 rounded-lg">
-                        <input type="number" id="new_teammate_score" placeholder="Score" class="w-1/4 px-4 py-2 bg-gray-700 text-gray-200 rounded-lg" min="0">
+                        <input type="number" id="new_teammate_score" placeholder="Score" class="w-1/4 px-4 py-2 bg-gray-700 text-gray-200 rounded-lg" min="0" max="300">
+                        <p class="text-sm text-gray-400 mt-1">The score of a teammate can be a maximum of 300.</p>
                         <button type="button" id="add-teammate" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Add Teammate</button>
                     </div>
                     <p id="teammate-error" class="text-red-500 mt-2 hidden">Maximum of 8 teammates reached!</p>
