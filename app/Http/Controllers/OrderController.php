@@ -61,25 +61,44 @@ class OrderController extends Controller
     
         return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
     }
+
     public function edit($id)
-{
-    $order = Order::findOrFail($id); // Fetch the order by ID
+    {
+        $order = Order::findOrFail($id); // Fetch the order by ID
 
-    // Define product prices
-    $productPrices = [
-        'Pizza' => 10.00,
-        'Nachos' => 8.00,
-        'Drinks Package' => 15.00,
-        'Burger' => 12.00,
-        'VIP Package' => 50.00,
-        'Wings' => 9.00,
-        'Fries' => 5.00,
-        'Snack Platter' => 20.00,
-        'Premium Drinks' => 25.00,
-        'Kids Menu' => 7.00
-    ];
+        // Define product prices
+        $productPrices = [
+            'Pizza' => 10.00,
+            'Nachos' => 8.00,
+            'Drinks Package' => 15.00,
+            'Burger' => 12.00,
+            'VIP Package' => 50.00,
+            'Wings' => 9.00,
+            'Fries' => 5.00,
+            'Snack Platter' => 20.00,
+            'Premium Drinks' => 25.00,
+            'Kids Menu' => 7.00
+        ];
 
-    return view('Order.edit', compact('order', 'productPrices')); // Pass the order and product prices to the edit view
-}
-    
+        return view('Order.edit', compact('order', 'productPrices')); // Pass the order and product prices to the edit view
+    }
+
+    public function create()
+    {
+        // Define product prices
+        $productPrices = [
+            'Pizza' => 10.00,
+            'Nachos' => 8.00,
+            'Drinks Package' => 15.00,
+            'Burger' => 12.00,
+            'VIP Package' => 50.00,
+            'Wings' => 9.00,
+            'Fries' => 5.00,
+            'Snack Platter' => 20.00,
+            'Premium Drinks' => 25.00,
+            'Kids Menu' => 7.00
+        ];
+
+        return view('Order.create', compact('productPrices'));
+    }
 }
