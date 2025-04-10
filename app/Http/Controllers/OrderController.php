@@ -9,8 +9,10 @@ class OrderController extends Controller
 {
     public function index()
     {
-            $orders = Order::all();
-            return view('Order.Index', compact('orders'));
+        $orders = Order::orderByRaw("FIELD(status, 'pending', 'making', 'send')")
+                       ->orderBy('id')
+                       ->paginate(10); // Paginate orders with 10 per page
+        return view('Order.Index', compact('orders'));
     }
 
     public function store(Request $request)

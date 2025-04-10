@@ -88,6 +88,9 @@
                 @endforelse
             </tbody>
         </table>
+        <div class="mt-4">
+            {{ $orders->links() }} <!-- Add pagination links -->
+        </div>
         <div class="text-center mt-8">
             <a href="{{ route('orders.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Order here</a>
         </div>
