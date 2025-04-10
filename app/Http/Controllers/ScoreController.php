@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Score;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\StoreScoreRequest;
+use App\Http\Requests\UpdateScoreRequest;
 
 class ScoreController extends Controller
 {
@@ -44,8 +46,13 @@ class ScoreController extends Controller
             'new_members.*.name' => 'required|string|max:255',
             'new_members.*.score' => 'required|integer|min:0|max:300',
         ], [
-            'scores.*.max' => 'The score for a participant must not exceed 300.',
-            'new_members.*.score.max' => 'The score of a teammate can be a maximum of 300.',
+            'reservation_id.required' => 'Selecting a team is mandatory.',
+            'scores.required' => 'All fields are required.',
+            'scores.*.required' => 'A score is required for each participant.',
+            'scores.*.max' => 'The score for a participant cannot exceed 300.',
+            'new_members.*.name.required' => 'A name is required for each new team member.',
+            'new_members.*.score.required' => 'A score is required for each new team member.',
+            'new_members.*.score.max' => 'The score for a team member can be a maximum of 300.',
         ]);
 
         // Use custom team name if provided, otherwise generate from reservation
@@ -95,12 +102,14 @@ class ScoreController extends Controller
         }
 
         // Add new members if space allows
-        foreach ($validated['new_members'] as $newMember) {
-            if ($teammateIndex <= 8) {
-                $scoreData["teammate{$teammateIndex}"] = $newMember['name'];
-                $scoreData["teammate{$teammateIndex}_score"] = $newMember['score'];
-                $totalPoints += $newMember['score'];
-                $teammateIndex++;
+        if (isset($validated['new_members'])) {
+            foreach ($validated['new_members'] as $newMember) {
+                if ($teammateIndex <= 8) {
+                    $scoreData["teammate{$teammateIndex}"] = $newMember['name'];
+                    $scoreData["teammate{$teammateIndex}_score"] = $newMember['score'];
+                    $totalPoints += $newMember['score'];
+                    $teammateIndex++;
+                }
             }
         }
 
@@ -110,7 +119,7 @@ class ScoreController extends Controller
         // Save the score
         \DB::table('scores')->insert($scoreData);
 
-        return redirect()->route('scores.index')->with('success', 'Score saved successfully!');
+        return redirect()->route('scores.index')->with('success', 'Score succesvol toegevoegd!');
     }
 
     public function show($id)
@@ -127,7 +136,7 @@ class ScoreController extends Controller
         // Check if status is confirmed - prevent editing
         if ($score && $score->status === 'Confirmed') {
             return redirect()->route('scores.index')
-                ->with('error', 'Cannot edit a confirmed score.');
+                ->withErrors(['error' => 'De score kan niet aangepast worden omdat deze al bevestigd is.']);
         }
 
         $validated = $request->validate([
@@ -191,7 +200,7 @@ class ScoreController extends Controller
         // Update the score record
         DB::table('scores')->where('id', $id)->update($updateData);
 
-        return redirect()->route('scores.index')->with('success', 'Score successfully updated.');
+        return redirect()->route('scores.index')->with('success', 'Score successfully updated!');
     }
 
     public function destroy($id)
@@ -202,11 +211,11 @@ class ScoreController extends Controller
         // Check if status is confirmed - prevent deleting
         if ($score && $score->status === 'Confirmed') {
             return redirect()->route('scores.index')
-                ->with('error', 'Cannot delete a confirmed score.');
+                ->with('error', 'The score cannot be deleted because it has already been confirmed.');
         }
 
         DB::statement('CALL DeleteScore(?)', [$id]);
-        return redirect()->route('scores.index')->with('success', 'Score successfully deleted.');
+        return redirect()->route('scores.index')->with('success', 'Score has been deleted!');
     }
 
     public function create(Request $request)
@@ -246,6 +255,18 @@ class ScoreController extends Controller
     public function edit($id)
     {
         $score = DB::table('scores')->where('id', $id)->first();
+
+        // Check if score exists
+        if (!$score) {
+            return redirect()->route('scores.index')->with('error', 'Score niet gevonden.');
+        }
+
+        // Check if status is confirmed - prevent editing
+        if ($score->status === 'Confirmed') {
+            return redirect()->route('scores.index')
+                ->withErrors(['error' => 'The score cannot be edited because it has already been confirmed.']);
+        }
+
         return view('scores.edit', ['score' => $score]);
     }
 }
