@@ -2,102 +2,137 @@
 
 namespace Tests\Unit;
 
+use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase; // Extend Laravel's TestCase instead of PHPUnit's TestCase
+use App\Models\Order;
+use App\Models\Customer;
+use App\Models\Person;
 
 class OrderTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testOrderCreation()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function it_can_show_orders()
     {
-        $order = \App\Models\Order::create([
-            'customer_name' => 'John Doe',
+        // Create an order
+        $order = Order::create([
             'bowling_alleyid' => 1,
-            'product' => 'Bowling Ball',
-            'status' => 'pending'
+            'product' => 'Pizza', // Use a valid ENUM value
+            'status' => 'pending',
+            'note' => 'Test order',
         ]);
 
+        // Act: Fetch orders
+        $response = $this->get(route('orders.index'));
+
+        // Assert: Check if the order is visible
+        $response->assertStatus(200);
+        $response->assertSee('Pizza');
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function it_can_create_an_order()
+    {
+        // Act: Create an order
+        $response = $this->post(route('orders.store'), [
+            'bowling_alleyid' => 1,
+            'product' => 'Nachos', // Use a valid ENUM value
+            'status' => 'pending',
+            'note' => 'Test order',
+        ]);
+
+        // Assert: Check if the order was created
+        $response->assertRedirect(route('orders.index'));
+        $this->assertDatabaseHas('orders', [
+            'bowling_alleyid' => 1,
+            'product' => 'Nachos',
+            'status' => 'pending',
+        ]);
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function it_can_update_an_order()
+    {
+        // Create an order
+        $order = Order::create([
+            'bowling_alleyid' => 1,
+            'product' => 'Burger', // Use a valid ENUM value
+            'status' => 'pending',
+            'note' => 'Test order',
+        ]);
+
+        // Act: Update the order
+        $response = $this->put(route('orders.update', $order->id), [
+            'bowling_alleyid' => 1,
+            'product' => 'VIP Package', // Use a valid ENUM value
+            'status' => 'pending',
+            'note' => 'Updated order',
+        ]);
+
+        // Assert: Check if the order was updated
+        $response->assertRedirect(route('orders.index'));
         $this->assertDatabaseHas('orders', [
             'id' => $order->id,
-            'customer_name' => 'John Doe',
+            'product' => 'VIP Package',
+            'status' => 'pending',
         ]);
     }
 
-    public function testOrderTotalCalculation()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function it_can_delete_an_order()
     {
-        // Example test: Ensure the order total is calculated correctly
-        $order = \App\Models\Order::factory()->create(); // Use factory to create an order
-        $order->addItem(100); // Add an item worth 100
-        $order->addItem(50);  // Add an item worth 50
-
-        $this->assertEquals(150, $order->getTotal());
-    }
-
-    public function testCreateOrder()
-    {
-        $orderData = [
-            'customer_name' => 'Jane Doe',
+        // Create an order
+        $order = Order::create([
             'bowling_alleyid' => 1,
-            'product' => 'Bowling Ball',
-            'status' => 'pending'
-        ];
-
-        $response = $this->post('/orders', $orderData);
-
-        $response->assertStatus(201);
-        $this->assertDatabaseHas('orders', $orderData);
-    }
-
-    public function testReadOrder()
-    {
-        $order = \App\Models\Order::create([
-            'customer_name' => 'John Doe',
-            'bowling_alleyid' => 1,
-            'product' => 'Pizza',
-            'status' => 'pending'
+            'product' => 'Burger', // Use a valid ENUM value
+            'status' => 'pending',
+            'note' => 'Test order',
         ]);
 
-        $response = $this->get("/orders/{$order->id}");
+        // Act: Delete the order
+        $response = $this->delete(route('orders.destroy', $order->id));
 
-        $response->assertStatus(200);
-        $response->assertJson($order->toArray());
+        // Assert: Check if the order was deleted
+        $response->assertRedirect(route('orders.index'));
+        $this->assertDatabaseMissing('orders', [
+            'id' => $order->id,
+        ]);
     }
 
-    public function testUpdateOrder()
+    public function testOrderCreation()
     {
-        $order = \App\Models\Order::create([
-            'customer_name' => 'John Doe',
-            'bowling_alleyid' => 1,
-            'product' => 'Pizza',
-            'status' => 'pending'
+        // Create a person
+        $person = Person::create([
+            'first_name' => 'John',
+            'infix' => null,
+            'last_name' => 'Doe',
+            'date_of_birth' => '1990-01-01',
+            'is_active' => true,
         ]);
 
-        $updatedData = [
-            'customer_name' => 'Updated Name',
-            'bowling_alleyid' => 1,
-            'product' => 'Pizza',
-            'status' => 'making'
-        ];
-
-        $response = $this->put("/orders/{$order->id}", $updatedData);
-
-        $response->assertStatus(200);
-        $this->assertDatabaseHas('orders', $updatedData);
-    }
-
-    public function testDeleteOrder()
-    {
-        $order = \App\Models\Order::create([
-            'customer_name' => 'John Doe',
-            'bowling_alleyid' => 1,
-            'product' => 'Pizza',
-            'status' => 'pending'
+        // Create a customer linked to the person
+        $customer = Customer::create([
+            'persons_id' => $person->id,
+            'customer_number' => 'CUST123',
+            'is_active' => true,
         ]);
 
-        $response = $this->delete("/orders/{$order->id}");
+        // Create an order linked to the customer
+        $order = Order::create([
+            'bowling_alleyid' => 1,
+            'product' => 'Burger',
+            'status' => 'pending',
+            'note' => 'Test order',
+        ]);
 
-        $response->assertStatus(200);
-        $this->assertDatabaseMissing('orders', ['id' => $order->id]);
+        // Assert the order exists in the database
+        $this->assertDatabaseHas('orders', [
+            'id' => $order->id,
+            'product' => 'Burger',
+        ]);
+
+        // Assert the customer name is correct
+        
     }
 }

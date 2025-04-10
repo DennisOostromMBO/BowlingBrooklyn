@@ -7,13 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $fillable = [
-        'customerid',
-        'totalamount',
+        'bowling_alleyid',
+        'product',
         'status',
-        'ispaid',
+        'price',
+        'total_price',
+        'isactive',
         'note',
-        'datecreated',
-        'datemodified',
-        'product' // Added product to allow mass assignment
     ];
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
 }
