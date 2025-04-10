@@ -6,6 +6,7 @@
             <a href="/lanes" class="hover:text-blue-400">Lanes</a>
             <a href="/contact" class="hover:text-blue-400">Contact</a>
             <a href="/example" class="hover:text-blue-400">Example</a>
+            <a href="{{ route('scores.index') }}" class="hover:text-blue-400">Scores</a>
         </div>
     </div>
 </nav>
