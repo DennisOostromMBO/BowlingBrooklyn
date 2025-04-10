@@ -1,5 +1,3 @@
-DELIMITER //
-
 CREATE PROCEDURE getAllCustomers()
 BEGIN
     SELECT 
@@ -19,6 +17,6 @@ BEGIN
     INNER JOIN contacts c ON cu.id = c.customer_id
     INNER JOIN users u ON p.id = u.person_id
     WHERE cu.is_active = true;
-END //
+END;
 
-DELIMITER ;
+
