@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Person extends Model
 {
+    use HasFactory;
+
     protected $table = 'persons'; // Explicitly define the table name
 
     protected $fillable = [
@@ -17,8 +20,9 @@ class Person extends Model
         'note',
     ];
 
-    public function customer()
+    // Accessor for full name
+    public function getFullNameAttribute(): string
     {
-        return $this->hasOne(Customer::class, 'persons_id');
+        return trim("{$this->first_name} {$this->infix} {$this->last_name}");
     }
 }
