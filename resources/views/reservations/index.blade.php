@@ -12,13 +12,15 @@
     <!-- Reservations Content -->
     <div class="container mx-auto py-20">
         <h1 class="text-4xl font-bold text-center mb-8">Reservations</h1>
+
+
         <table class="w-full border-collapse bg-gray-800 text-gray-200">
             <thead>
                 <tr>
                     <th class="border border-gray-700 px-4 py-2">User</th>
                     <th class="border border-gray-700 px-4 py-2">Ally Number</th>
                     <th class="border border-gray-700 px-4 py-2">Number of Persons</th>
-                    <th class="border border-gray-700 px-4 py-2">Reservation Date</th> <!-- Added column -->
+                    <th class="border border-gray-700 px-4 py-2">Reservation Date</th>
                     <th class="border border-gray-700 px-4 py-2">Active</th>
                     <th class="border border-gray-700 px-4 py-2">Note</th>
                     <th class="border border-gray-700 px-4 py-2">Actions</th>
@@ -34,10 +36,7 @@
                     <td class="border border-gray-700 px-4 py-2">{{ $reservation->isactive ? 'Yes' : 'No' }}</td>
                     <td class="border border-gray-700 px-4 py-2">{{ $reservation->note }}</td>
                     <td class="border border-gray-700 px-4 py-2">
-                        <!-- Edit Button -->
                         <button class="edit" onclick="window.location='{{ route('reservations.edit', $reservation->id) }}'">Edit</button>
-                        
-                        <!-- Delete Button -->
                         <form action="{{ route('reservations.destroy', $reservation->id) }}" method="POST" class="inline-block">
                             @csrf
                             @method('DELETE')
@@ -54,6 +53,16 @@
                 @endforeach
             </tbody>
         </table>
+
+        <!-- Pagination and Create Button -->
+        <div class="flex justify-between items-center mt-4">
+            <a href="{{ route('reservations.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                Create Reservation
+            </a>
+            <div class="pagination-links">
+                {{ $reservations->links('pagination::tailwind') }}
+            </div>
+        </div>
     </div>
 
     <!-- Footer -->

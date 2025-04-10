@@ -10,7 +10,7 @@ class ReservationController extends Controller
 {
     public function index()
     {
-        $reservations = Reservation::all();
+        $reservations = Reservation::paginate(5); // Paginate with 10 items per page
         return view('reservations.index', compact('reservations'));
     }
 
