@@ -10,8 +10,14 @@ class ReservationController extends Controller
 {
     public function index()
     {
-        $reservations = Reservation::paginate(5); // Paginate with 10 items per page
+        $reservations = Reservation::paginate(5); // Paginate with 5 items per page
         return view('reservations.index', compact('reservations'));
+    }
+
+    public function edit($id)
+    {
+        $reservation = Reservation::findOrFail($id); // Retrieve the reservation by ID
+        return view('reservations.edit', compact('reservation')); // Pass the reservation to the edit view
     }
 
     public function update(Request $request, $id)
@@ -19,14 +25,16 @@ class ReservationController extends Controller
         $request->validate([
             'ally_number' => 'required|integer',
             'number_of_persons' => 'required|integer',
+            'reservation_date' => 'required|date',
             'isactive' => 'required|boolean',
             'note' => 'nullable|string',
         ]);
 
-        DB::statement('CALL spUpdateReservation(?, ?, ?, ?, ?)', [
+        DB::statement('CALL spUpdateReservation(?, ?, ?, ?, ?, ?)', [
             $id,
             $request->ally_number,
             $request->number_of_persons,
+            $request->reservation_date,
             $request->isactive,
             $request->note,
         ]);
