@@ -49,7 +49,8 @@ class OrderController extends Controller
 
         $order = Order::findOrFail($id);
         $order->update($validated);
-        return response()->json($order);
+        
+        return redirect()->route('orders.index')->with('success', 'Order is updated');
     }
 
     public function destroy($id)
@@ -65,4 +66,10 @@ class OrderController extends Controller
     
         return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
     }
+    public function edit($id)
+{
+    $order = Order::findOrFail($id); // Fetch the order by ID
+    return view('Order.edit', compact('order')); // Pass the order to the edit view
+}
+    
 }

@@ -8,6 +8,11 @@
 </head>
 <body class="bg-gray-900 text-gray-200">
     <x-navbar />
+    @if(session('success'))
+    <div class="bg-green-500 text-white px-4 py-2 rounded mb-4">
+        {{ session('success') }}
+    </div>
+@endif
     <div class="container mx-auto py-20">
         @if (session('success'))
             <div class="bg-green-500 text-white text-center py-2 mb-4 rounded">
@@ -42,7 +47,7 @@
                         <td class="border border-gray-700 px-4 py-2">{{ $order->status }}</td>
                         <td class="border border-gray-700 px-4 py-2">{{ $order->total_price }}</td>
                         <td class="border border-gray-700 px-4 py-2">
-                            <button class="edit bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
+                            <a href="{{ route('orders.edit', $order->id) }}" class="edit bg-blue-500 text-white px-2 py-1 rounded">Edit</a>
                             <form action="{{ route('orders.destroy', $order->id) }}" method="POST" class="inline-block">
                                 @csrf
                                 @method('DELETE')
