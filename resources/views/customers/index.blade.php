@@ -55,14 +55,26 @@
                             <form method="POST" action="/customers/{{ $customer->id }}" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" onclick="return confirm('Are you sure you want to delete this customer?')" 
-                                    class="text-red-500 hover:text-red-700 text-xl">❌</button>
+                                <button type="submit" 
+                                    @if(!$customer->has_reservations) 
+                                        disabled 
+                                        class="bg-gray-500 text-gray-300 cursor-not-allowed text-xl px-3 py-1 rounded opacity-50"
+                                        title="Cannot delete customer without reservations"
+                                    @else
+                                        onclick="return confirm('Are you sure you want to delete this customer?')"
+                                        class="bg-transparent text-red-500 hover:text-red-700 text-xl"
+                                    @endif
+                                >❌</button>
                             </form>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+
+        <div class="mt-4">
+            {{ $customers->links() }}
+        </div>
     </div>
 
     <footer class="bg-gray-800 text-white py-6">

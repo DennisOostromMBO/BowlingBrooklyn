@@ -10,6 +10,19 @@ class CustomerController extends Controller
     public function index()
     {
         $customers = DB::select('CALL getAllCustomers()');
+        $page = request()->get('page', 1);
+        $perPage = 5;
+        
+        $pagedData = array_slice($customers, ($page - 1) * $perPage, $perPage);
+        
+        $customers = new \Illuminate\Pagination\LengthAwarePaginator(
+            $pagedData,
+            count($customers),
+            $perPage,
+            $page,
+            ['path' => request()->url()]
+        );
+        
         return view('customers.index', ['customers' => $customers]);
     }
 
@@ -131,6 +144,12 @@ class CustomerController extends Controller
 
     public function destroy($id)
     {
+        // Check if customer has reservations
+        $customer = DB::select('CALL getCustomerById(?)', [$id])[0];
+        if (!$customer->has_reservations) {
+            return back()->with('error', 'Cannot delete customer without reservations.');
+        }
+
         DB::select('CALL deleteCustomer(?)', [$id]);
         return redirect('/customers')->with('success', 'Customer deleted successfully');
     }
