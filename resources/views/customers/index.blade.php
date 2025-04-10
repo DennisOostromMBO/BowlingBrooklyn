@@ -43,7 +43,7 @@
                         <td class="border border-gray-700 px-4 py-2">{{ $customer->phone }}</td>
                         <td class="border border-gray-700 px-4 py-2">{{ $customer->email }}</td>
                         <td class="border border-gray-700 px-4 py-2 text-center">
-                            <button class="text-blue-500 hover:text-blue-700 text-xl">✏️</button>
+                            <a href="/customers/{{ $customer->id }}/edit" class="text-blue-500 hover:text-blue-700 text-xl">✏️</a>
                         </td>
                         <td class="border border-gray-700 px-4 py-2 text-center">
                             <button class="text-red-500 hover:text-red-700 text-xl">❌</button>

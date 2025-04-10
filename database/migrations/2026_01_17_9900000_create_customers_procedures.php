@@ -8,17 +8,21 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Drop existing procedure if it exists
+        // Drop existing procedures
         DB::unprepared('DROP PROCEDURE IF EXISTS getAllCustomers');
+        DB::unprepared('DROP PROCEDURE IF EXISTS getCustomerById');
 
-        // Create getAllCustomers procedure
+        // Create procedures
         $pathGetAll = database_path('sp/CustomersSP/getAllCustomersSP.sql');
         DB::unprepared(File::get($pathGetAll));
+
+        $pathGetById = database_path('sp/CustomersSP/getCustomerByIdSP.sql');
+        DB::unprepared(File::get($pathGetById));
     }
 
     public function down(): void
     {
-        // Drop procedure
         DB::unprepared('DROP PROCEDURE IF EXISTS getAllCustomers');
+        DB::unprepared('DROP PROCEDURE IF EXISTS getCustomerById');
     }
 };

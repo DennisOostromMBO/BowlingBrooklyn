@@ -1,4 +1,4 @@
-CREATE PROCEDURE getAllCustomers()
+CREATE PROCEDURE getCustomerById(IN customerId INT)
 BEGIN
     SELECT 
         cu.id,
@@ -17,7 +17,5 @@ BEGIN
     INNER JOIN customers cu ON p.id = cu.persons_id
     INNER JOIN contacts c ON cu.id = c.customer_id
     INNER JOIN users u ON p.id = u.person_id
-    WHERE cu.is_active = true;
+    WHERE cu.id = customerId AND cu.is_active = true;
 END;
-
-

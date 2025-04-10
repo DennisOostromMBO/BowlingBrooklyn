@@ -12,4 +12,10 @@ class CustomerController extends Controller
         $customers = DB::select('CALL getAllCustomers()');
         return view('customers.index', ['customers' => $customers]);
     }
+
+    public function edit($id)
+    {
+        $customer = DB::select('CALL getCustomerById(?)', [$id])[0];
+        return view('customers.edit', ['customer' => $customer]);
+    }
 }
