@@ -33,6 +33,43 @@ class CustomerController extends Controller
 
     public function store(Request $request)
     {
+        $validatedData = $request->validate([
+            'first_name' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\- ]+$/u',
+            'infix' => 'nullable|string|max:255|regex:/^[a-zA-ZÀ-ÿ\- ]+$/u',
+            'last_name' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\- ]+$/u',
+            'date_of_birth' => 'required|date|after_or_equal:1900-01-01|before:today',
+            'street_name' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\- ]+$/u',
+            'house_number' => 'required|regex:/^\d+$/|digits_between:1,4',
+            'addition' => 'nullable|string|max:8',
+            'postal_code' => 'required|regex:/^[0-9]{4}[A-Z]{2}$/',
+            'city' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\- ]+$/u',
+            'phone' => 'required|regex:/^06\d{8}$/',
+            'email' => 'required|email|max:255|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/|not_regex:/xn--/'
+        ], [
+            'first_name.required' => 'First name is required',
+            'first_name.regex' => 'First name is invalid',
+            'infix.regex' => 'Infix is invalid',
+            'last_name.required' => 'Last name is required',
+            'last_name.regex' => 'Last name is invalid',
+            'date_of_birth.required' => 'Date of birth is required',
+            'date_of_birth.date' => 'Date of birth is invalid',
+            'date_of_birth.after_or_equal' => 'Date of birth is invalid',
+            'date_of_birth.before' => 'Date of birth is invalid',
+            'street_name.required' => 'Street name is required',
+            'street_name.regex' => 'Street name is invalid',
+            'house_number.required' => 'House number is required',
+            'house_number.regex' => 'House number must be numeric',
+            'postal_code.required' => 'Postal code is required',
+            'postal_code.regex' => 'Postal code is invalid',
+            'city.required' => 'City is required',
+            'city.regex' => 'City name is invalid',
+            'phone.required' => 'Phone number is required',
+            'phone.regex' => 'Phone number is invalid',
+            'email.required' => 'Email address is required',
+            'email.email' => 'Email address is invalid',
+            'email.regex' => 'Email address format is invalid'
+        ]);
+
         // Check if email exists
         $emailExists = DB::select('SELECT COUNT(*) as count FROM users WHERE email = ?', [$request->email])[0]->count > 0;
         
@@ -50,18 +87,6 @@ class CustomerController extends Controller
                 ->withInput()
                 ->withErrors(['phone' => 'This phone number is already associated with a customer.']);
         }
-
-        $validatedData = $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'date_of_birth' => 'required|date',
-            'street_name' => 'required',
-            'house_number' => 'required',
-            'postal_code' => 'required',
-            'city' => 'required',
-            'phone' => 'required',
-            'email' => 'required|email'
-        ]);
 
         DB::select('CALL createCustomer(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
             $validatedData['first_name'],
@@ -88,6 +113,43 @@ class CustomerController extends Controller
 
     public function update(Request $request, $id)
     {
+        $validatedData = $request->validate([
+            'first_name' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\- ]+$/u',
+            'infix' => 'nullable|string|max:255|regex:/^[a-zA-ZÀ-ÿ\- ]+$/u',
+            'last_name' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\- ]+$/u',
+            'date_of_birth' => 'required|date|after_or_equal:1900-01-01|before:today',
+            'street_name' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\- ]+$/u',
+            'house_number' => 'required|regex:/^\d+$/|digits_between:1,4',
+            'addition' => 'nullable|string|max:8',
+            'postal_code' => 'required|regex:/^[0-9]{4}[A-Z]{2}$/',
+            'city' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\- ]+$/u',
+            'phone' => 'required|regex:/^06\d{8}$/',
+            'email' => 'required|email|max:255|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/|not_regex:/xn--/'
+        ], [
+            'first_name.required' => 'First name is required',
+            'first_name.regex' => 'First name is invalid',
+            'infix.regex' => 'Infix is invalid',
+            'last_name.required' => 'Last name is required',
+            'last_name.regex' => 'Last name is invalid',
+            'date_of_birth.required' => 'Date of birth is required',
+            'date_of_birth.date' => 'Date of birth is invalid',
+            'date_of_birth.after_or_equal' => 'Date of birth is invalid',
+            'date_of_birth.before' => 'Date of birth is invalid',
+            'street_name.required' => 'Street name is required',
+            'street_name.regex' => 'Street name is invalid',
+            'house_number.required' => 'House number is required',
+            'house_number.regex' => 'House number must be numeric',
+            'postal_code.required' => 'Postal code is required',
+            'postal_code.regex' => 'Postal code is invalid',
+            'city.required' => 'City is required',
+            'city.regex' => 'City name is invalid',
+            'phone.required' => 'Phone number is required',
+            'phone.regex' => 'Phone number is invalid',
+            'email.required' => 'Email address is required',
+            'email.email' => 'Email address is invalid',
+            'email.regex' => 'Email address format is invalid'
+        ]);
+
         // Check if email exists for other customers
         $emailExists = DB::select('SELECT COUNT(*) as count FROM users u 
             INNER JOIN persons p ON u.person_id = p.id 
@@ -114,24 +176,12 @@ class CustomerController extends Controller
                 ->withErrors(['phone' => 'This phone number is already associated with another customer.']);
         }
 
-        $validatedData = $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'date_of_birth' => 'required|date',
-            'street_name' => 'required',
-            'house_number' => 'required',
-            'postal_code' => 'required',
-            'city' => 'required',
-            'phone' => 'required',
-            'email' => 'required|email'
-        ]);
-
         DB::select('CALL updateCustomer(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
             $id,
             $validatedData['first_name'],
             $request->infix,
             $validatedData['last_name'],
-            $validatedData['date_of_birth'],  // Added date_of_birth parameter
+            $validatedData['date_of_birth'],
             $validatedData['street_name'],
             $validatedData['house_number'],
             $request->addition,

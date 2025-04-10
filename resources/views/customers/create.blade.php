@@ -30,62 +30,95 @@
             <form method="POST" action="/customers" class="space-y-6">
                 @csrf
                 <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium">First Name</label>
+                    <div class="relative mt-6">
+                        @error('first_name')
+                            <div class="absolute -top-7 left-0 text-red-600 text-sm font-semibold">{{ $message }}</div>
+                        @enderror
+                        <label class="block text-sm font-medium mt-4">First Name</label>
                         <input type="text" name="first_name" value="{{ old('first_name') }}" 
-                            class="mt-1 block w-full rounded bg-white border-gray-300 text-gray-900 px-3 py-2">
+                            class="mt-1 block w-full rounded bg-white border-gray-300 @error('first_name') border-red-500 @enderror text-gray-900 px-3 py-2">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium">Infix</label>
+                    <div class="relative mt-6">
+                        @error('infix')
+                            <div class="absolute -top-7 left-0 text-red-600 text-sm font-semibold">{{ $message }}</div>
+                        @enderror
+                        <label class="block text-sm font-medium mt-4">Infix</label>
                         <input type="text" name="infix" value="{{ old('infix') }}" 
-                            class="mt-1 block w-full rounded bg-white border-gray-300 text-gray-900 px-3 py-2">
+                            class="mt-1 block w-full rounded bg-white border-gray-300 @error('infix') border-red-500 @enderror text-gray-900 px-3 py-2">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium">Last Name</label>
+                    <div class="relative mt-6">
+                        @error('last_name')
+                            <div class="absolute -top-7 left-0 text-red-600 text-sm font-semibold">{{ $message }}</div>
+                        @enderror
+                        <label class="block text-sm font-medium mt-4">Last Name</label>
                         <input type="text" name="last_name" value="{{ old('last_name') }}" 
-                            class="mt-1 block w-full rounded bg-white border-gray-300 text-gray-900 px-3 py-2">
+                            class="mt-1 block w-full rounded bg-white border-gray-300 @error('last_name') border-red-500 @enderror text-gray-900 px-3 py-2">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium">Date of Birth</label>
+                    <div class="relative mt-6">
+                        @error('date_of_birth')
+                            <div class="absolute -top-7 left-0 text-red-600 text-sm font-semibold">{{ $message }}</div>
+                        @enderror
+                        <label class="block text-sm font-medium mt-4">Date of Birth</label>
                         <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}" 
-                            class="mt-1 block w-full rounded bg-white border-gray-300 text-gray-900 px-3 py-2">
+                            class="mt-1 block w-full rounded bg-white border-gray-300 @error('date_of_birth') border-red-500 @enderror text-gray-900 px-3 py-2">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium">Street Name</label>
+                    <div class="relative mt-6">
+                        @error('street_name')
+                            <div class="absolute -top-7 left-0 text-red-600 text-sm font-semibold">{{ $message }}</div>
+                        @enderror
+                        <label class="block text-sm font-medium mt-4">Street Name</label>
                         <input type="text" name="street_name" value="{{ old('street_name') }}" 
-                            class="mt-1 block w-full rounded bg-white border-gray-300 text-gray-900 px-3 py-2">
+                            class="mt-1 block w-full rounded bg-white border-gray-300 @error('street_name') border-red-500 @enderror text-gray-900 px-3 py-2">
                     </div>
                     <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-sm font-medium">House Number</label>
+                        <div class="relative mt-6">
+                            @error('house_number')
+                                <div class="absolute -top-7 left-0 text-red-600 text-sm font-semibold">{{ $message }}</div>
+                            @enderror
+                            <label class="block text-sm font-medium mt-4">House Number</label>
                             <input type="text" name="house_number" value="{{ old('house_number') }}" 
-                                class="mt-1 block w-full rounded bg-white border-gray-300 text-gray-900 px-3 py-2">
+                                class="mt-1 block w-full rounded bg-white border-gray-300 @error('house_number') border-red-500 @enderror text-gray-900 px-3 py-2">
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium">Addition</label>
+                        <div class="relative mt-6">
+                            @error('addition')
+                                <div class="absolute -top-7 left-0 text-red-600 text-sm font-semibold">{{ $message }}</div>
+                            @enderror
+                            <label class="block text-sm font-medium mt-4">Addition</label>
                             <input type="text" name="addition" value="{{ old('addition') }}" 
-                                class="mt-1 block w-full rounded bg-white border-gray-300 text-gray-900 px-3 py-2">
+                                class="mt-1 block w-full rounded bg-white border-gray-300 @error('addition') border-red-500 @enderror text-gray-900 px-3 py-2">
                         </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium">Postal Code</label>
+                    <div class="relative mt-6">
+                        @error('postal_code')
+                            <div class="absolute -top-7 left-0 text-red-600 text-sm font-semibold">{{ $message }}</div>
+                        @enderror
+                        <label class="block text-sm font-medium mt-4">Postal Code</label>
                         <input type="text" name="postal_code" value="{{ old('postal_code') }}" 
-                            class="mt-1 block w-full rounded bg-white border-gray-300 text-gray-900 px-3 py-2">
+                            class="mt-1 block w-full rounded bg-white border-gray-300 @error('postal_code') border-red-500 @enderror text-gray-900 px-3 py-2">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium">City</label>
+                    <div class="relative mt-6">
+                        @error('city')
+                            <div class="absolute -top-7 left-0 text-red-600 text-sm font-semibold">{{ $message }}</div>
+                        @enderror
+                        <label class="block text-sm font-medium mt-4">City</label>
                         <input type="text" name="city" value="{{ old('city') }}" 
-                            class="mt-1 block w-full rounded bg-white border-gray-300 text-gray-900 px-3 py-2">
+                            class="mt-1 block w-full rounded bg-white border-gray-300 @error('city') border-red-500 @enderror text-gray-900 px-3 py-2">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium">Phone</label>
+                    <div class="relative mt-6">
+                        @error('phone')
+                            <div class="absolute -top-7 left-0 text-red-600 text-sm font-semibold">{{ $message }}</div>
+                        @enderror
+                        <label class="block text-sm font-medium mt-4">Phone</label>
                         <input type="tel" name="phone" value="{{ old('phone') }}" 
-                            class="mt-1 block w-full rounded bg-white border-gray-300 text-gray-900 px-3 py-2">
+                            class="mt-1 block w-full rounded bg-white border-gray-300 @error('phone') border-red-500 @enderror text-gray-900 px-3 py-2">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium">Email</label>
+                    <div class="relative mt-6">
+                        @error('email')
+                            <div class="absolute -top-7 left-0 text-red-600 text-sm font-semibold">{{ $message }}</div>
+                        @enderror
+                        <label class="block text-sm font-medium mt-4">Email</label>
                         <input type="email" name="email" value="{{ old('email') }}" 
-                            class="mt-1 block w-full rounded bg-white border-gray-300 text-gray-900 px-3 py-2 @error('email') border-red-500 @enderror">
+                            class="mt-1 block w-full rounded bg-white border-gray-300 @error('email') border-red-500 @enderror text-gray-900 px-3 py-2">
                     </div>
                 </div>
                 
