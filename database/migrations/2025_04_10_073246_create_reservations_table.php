@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->integer('ally_number');
             $table->integer('number_of_persons');
+            $table->date('reservation_date'); 
             $table->boolean('isactive')->default(true);
             $table->text('note')->nullable();
             $table->timestamps();
