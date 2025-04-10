@@ -33,6 +33,7 @@
                     <p class="text-sm text-gray-400">Leave blank to use the default name</p>
                 </div>
 
+                <!-- Registered Participants -->
                 @foreach($participants as $participant)
                     <div class="mb-4">
                         <label for="score_{{ $participant->id }}" class="block text-gray-200">{{ $participant->name }}</label>
@@ -41,18 +42,15 @@
                     </div>
                 @endforeach
 
-                <!-- Add Team Members Dynamically -->
-                <div id="team-members">
-                    <h3 class="text-xl font-bold text-center mb-4">Add Team Members</h3>
-                    <div class="mb-4">
-                        <label for="new_member_name" class="block text-gray-200">Name</label>
-                        <input type="text" id="new_member_name" class="w-full px-4 py-2 bg-gray-700 text-gray-200 rounded-lg">
+                <!-- Add New Teammate Section -->
+                <div class="mb-4">
+                    <h3 class="text-xl font-bold text-center mb-4">Add New Teammate</h3>
+                    <div class="flex items-center space-x-4">
+                        <input type="text" id="new_teammate_name" placeholder="Teammate Name" class="w-1/2 px-4 py-2 bg-gray-700 text-gray-200 rounded-lg">
+                        <input type="number" id="new_teammate_score" placeholder="Score" class="w-1/4 px-4 py-2 bg-gray-700 text-gray-200 rounded-lg" min="0">
+                        <button type="button" id="add-teammate" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Add Teammate</button>
                     </div>
-                    <div class="mb-4">
-                        <label for="new_member_score" class="block text-gray-200">Score</label>
-                        <input type="number" id="new_member_score" class="w-full px-4 py-2 bg-gray-700 text-gray-200 rounded-lg" min="0">
-                    </div>
-                    <button type="button" id="add-member" class="create bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">Add Member</button>
+                    <p id="teammate-error" class="text-red-500 mt-2 hidden">Maximum of 8 teammates reached!</p>
                 </div>
 
                 <button type="submit" class="create mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Save Game</button>
@@ -82,23 +80,15 @@
                 </table>
             </div>
         </div>
-
-        <!-- Add Teammate Section -->
-        <div class="mt-6">
-            <h2 class="text-2xl font-bold text-center mb-4">Add New Teammate</h2>
-            <div class="flex items-center space-x-4">
-                <input type="text" id="new_teammate_name" placeholder="Teammate Name" class="w-1/2 px-4 py-2 bg-gray-700 text-gray-200 rounded-lg">
-                <input type="number" id="new_teammate_score" placeholder="Score" class="w-1/4 px-4 py-2 bg-gray-700 text-gray-200 rounded-lg">
-                <button type="button" id="add-teammate" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Add Teammate</button>
-            </div>
-            <p id="teammate-error" class="text-red-500 mt-2 hidden">Maximum of 8 teammates reached!</p>
-        </div>
     @endif
 </div>
 
 <x-footer />
 
 <script>
+    let teammateCount = {{ count($participants) }};
+    const maxTeammates = 8;
+
     // Update scores in live ranking for registered members
     document.querySelectorAll('.score-input').forEach(input => {
         input.addEventListener('input', () => {
@@ -109,115 +99,6 @@
     });
 
     // Add new member to both form and live rankings
-    document.getElementById('add-member').addEventListener('click', () => {
-        const name = document.getElementById('new_member_name').value;
-        const score = document.getElementById('new_member_score').value;
-
-        if (name && score) {
-            const uniqueId = 'new_' + Date.now(); // Generate a unique ID for the new member
-            const memberForm = document.getElementById('scores-form');
-
-            // Create hidden inputs for the form submission
-            const hiddenNameInput = document.createElement('input');
-            hiddenNameInput.type = 'hidden';
-            hiddenNameInput.name = `new_members[][name]`;
-            hiddenNameInput.value = name;
-
-            const hiddenScoreInput = document.createElement('input');
-            hiddenScoreInput.type = 'hidden';
-            hiddenScoreInput.name = `new_members[][score]`;
-            hiddenScoreInput.value = score;
-
-            // Add hidden inputs to the form
-            memberForm.appendChild(hiddenNameInput);
-            memberForm.appendChild(hiddenScoreInput);
-
-            // Add member to live rankings
-            const rankings = document.getElementById('rankings');
-            const newRow = document.createElement('tr');
-            newRow.setAttribute('data-id', uniqueId);
-            newRow.className = 'added-member';
-            newRow.setAttribute('data-score', score);
-
-            // Add name column
-            const nameCell = document.createElement('td');
-            nameCell.className = 'border border-gray-700 px-4 py-2';
-            nameCell.textContent = name;
-
-            // Add score column
-            const scoreCell = document.createElement('td');
-            scoreCell.className = 'border border-gray-700 px-4 py-2';
-            scoreCell.textContent = score;
-
-            // Add delete button column
-            const actionCell = document.createElement('td');
-            actionCell.className = 'border border-gray-700 px-4 py-2';
-
-            const deleteButton = document.createElement('button');
-            deleteButton.type = 'button';
-            deleteButton.className = 'bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded';
-            deleteButton.textContent = 'Remove';
-            deleteButton.onclick = function() {
-                // Remove from the table
-                rankings.removeChild(newRow);
-
-                // Remove the hidden inputs from the form
-                memberForm.removeChild(hiddenNameInput);
-                memberForm.removeChild(hiddenScoreInput);
-            };
-
-            actionCell.appendChild(deleteButton);
-
-            // Assemble the row
-            newRow.appendChild(nameCell);
-            newRow.appendChild(scoreCell);
-            newRow.appendChild(actionCell);
-
-            // Add to the table
-            rankings.appendChild(newRow);
-
-            // Clear input fields
-            document.getElementById('new_member_name').value = '';
-            document.getElementById('new_member_score').value = '';
-
-            // Sort the rankings
-            sortRankings();
-        }
-    });
-
-    // Function to sort rankings by score (lowest to highest)
-    function sortRankings() {
-        const rankings = document.getElementById('rankings');
-        const rows = Array.from(rankings.querySelectorAll('tr'));
-
-        // Get scores for all rows (registered + added members)
-        rows.forEach(row => {
-            if(row.classList.contains('registered-member')) {
-                // For registered members, get score from the display cell
-                const id = row.getAttribute('data-id');
-                const scoreCell = document.getElementById(`score_display_${id}`);
-                const score = parseInt(scoreCell.textContent) || 0;
-                row.setAttribute('data-score', score);
-            }
-            // Added members already have data-score set
-        });
-
-        // Sort rows by score (lowest to highest)
-        rows.sort((a, b) => {
-            const scoreA = parseInt(a.getAttribute('data-score')) || 0;
-            const scoreB = parseInt(b.getAttribute('data-score')) || 0;
-            return scoreA - scoreB;
-        });
-
-        // Reorder the rows
-        rows.forEach(row => {
-            rankings.appendChild(row);
-        });
-    }
-
-    let teammateCount = {{ count($participants) }};
-    const maxTeammates = 8;
-
     document.getElementById('add-teammate').addEventListener('click', () => {
         if (teammateCount >= maxTeammates) {
             document.getElementById('teammate-error').classList.remove('hidden');
@@ -235,10 +116,15 @@
         // Add the new teammate to the rankings table
         const rankings = document.getElementById('rankings');
         const newRow = document.createElement('tr');
+        const uniqueId = `new_${Date.now()}`;
+        newRow.setAttribute('data-id', uniqueId);
+        newRow.setAttribute('data-score', score);
         newRow.innerHTML = `
             <td class="border border-gray-700 px-4 py-2">${name}</td>
-            <td class="border border-gray-700 px-4 py-2">${score}</td>
-            <td class="border border-gray-700 px-4 py-2">New</td>
+            <td class="border border-gray-700 px-4 py-2" id="score_display_${uniqueId}">${score}</td>
+            <td class="border border-gray-700 px-4 py-2">
+                <button type="button" class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded" onclick="removeTeammate('${uniqueId}')">Remove</button>
+            </td>
         `;
         rankings.appendChild(newRow);
 
@@ -262,5 +148,41 @@
         document.getElementById('new_teammate_score').value = '';
 
         teammateCount++;
+        sortRankings();
     });
+
+    // Remove teammate from the rankings and form
+    function removeTeammate(id) {
+        const row = document.querySelector(`tr[data-id="${id}"]`);
+        if (row) row.remove();
+
+        const scoresForm = document.getElementById('scores-form');
+        const nameInput = scoresForm.querySelector(`input[name="new_members[${id}][name]"]`);
+        const scoreInput = scoresForm.querySelector(`input[name="new_members[${id}][score]"]`);
+        if (nameInput) nameInput.remove();
+        if (scoreInput) scoreInput.remove();
+
+        teammateCount--;
+        sortRankings();
+    }
+
+    // Function to sort rankings by score (lowest to highest)
+    function sortRankings() {
+        const rankings = document.getElementById('rankings');
+        const rows = Array.from(rankings.querySelectorAll('tr'));
+
+        rows.forEach(row => {
+            const scoreCell = row.querySelector('[id^="score_display_"]');
+            const score = parseInt(scoreCell.textContent) || 0;
+            row.setAttribute('data-score', score);
+        });
+
+        rows.sort((a, b) => {
+            const scoreA = parseInt(a.getAttribute('data-score')) || 0;
+            const scoreB = parseInt(b.getAttribute('data-score')) || 0;
+            return scoreA - scoreB;
+        });
+
+        rows.forEach(row => rankings.appendChild(row));
+    }
 </script>

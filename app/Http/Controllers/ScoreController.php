@@ -65,11 +65,27 @@ class ScoreController extends Controller
             'team_name' => $teamName,
         ];
 
-        // Add teammates to the score data
+        // Add the team captain (first participant) as teammate1
         $teammateIndex = 1;
+        $captainId = null;
         foreach ($validated['scores'] as $userId => $score) {
+            if ($teammateIndex === 1) {
+                $scoreData["teammate{$teammateIndex}"] = $request->input("participant_names.{$userId}");
+                $scoreData["teammate{$teammateIndex}_score"] = $score;
+                $captainId = $userId; // Store the captain's ID to skip later
+                $teammateIndex++;
+                break; // Only the first participant is the captain
+            }
+        }
+
+        // Add other teammates to the score data, skipping the captain
+        foreach ($validated['scores'] as $userId => $score) {
+            if ($userId == $captainId) {
+                continue; // Skip the captain
+            }
+
             if ($teammateIndex <= 8) {
-                $scoreData["teammate{$teammateIndex}"] = "Player {$teammateIndex}";
+                $scoreData["teammate{$teammateIndex}"] = $request->input("participant_names.{$userId}");
                 $scoreData["teammate{$teammateIndex}_score"] = $score;
                 $teammateIndex++;
             }
