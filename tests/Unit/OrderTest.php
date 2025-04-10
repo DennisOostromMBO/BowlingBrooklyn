@@ -132,7 +132,6 @@ class OrderTest extends TestCase
             'product' => 'Burger',
         ]);
 
-        // Assert the customer name is correct
         
     }
 }
