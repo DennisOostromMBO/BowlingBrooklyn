@@ -21,7 +21,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// initial commit to push
 require __DIR__.'/auth.php';
 require __DIR__.'/wassim.php';
 require __DIR__.'/mahdi.php';
